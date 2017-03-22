@@ -18,13 +18,14 @@ public class TeleTaxiServerWeb extends Application {
     }
 
     public static void main(String[] args){
+        Component component = null;
         try {
-            Component component = new Component();
+            component = new Component();
             component.getServers().add(Protocol.HTTP, 8080);
             component.getDefaultHost().attach(new TeleTaxiServerWeb());
             component.start();
         } catch (Exception e) {
-            e.getMessage();
+            System.err.println("Errore nell'inizializzazione del WebServer.");
         }
     }
 
