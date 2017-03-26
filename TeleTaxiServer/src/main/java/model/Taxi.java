@@ -62,6 +62,23 @@ public class Taxi {
         return this;
     }
 
+    public void confermaCorsa(){
+        // da implementare
+    }
+
+    public void rifiutaCorsa(){
+        // da implementare
+    }
+
+    public String inserisciDestinazione(){
+        // da implementare
+        return null;
+    }
+
+    public void riceviNotifica(){
+        // da implementare
+    }
+
     @Override
     public String toString() {
         return "Taxi: " +
