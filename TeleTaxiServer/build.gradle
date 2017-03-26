@@ -1,0 +1,25 @@
+group 'TeleTaxiServer'
+version '0.1-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+
+repositories {
+    mavenCentral()
+    maven { url "http://maven.restlet.org" }
+    maven { url "https://mvnrepository.com/artifact/mysql/mysql-connector-java"}
+}
+
+ext.restletVersion = "2.3.4"
+
+
+dependencies {
+    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
+    compile "org.restlet.jee:org.restlet:${restletVersion}"
+    compile "org.restlet.jee:org.restlet.ext.jackson:${restletVersion}"
+    compile "org.restlet.jee:org.restlet.ext.jaxrs:${restletVersion}"
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
