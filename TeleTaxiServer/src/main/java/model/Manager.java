@@ -24,22 +24,16 @@ public class Manager extends Persona{
         return username;
     }
 
-    public Manager setUsername(String username) {
-        this.username = username;
-        return this;
-    }
+    public Manager setUsername(String username) {this.username = username; return this;}
 
     public String getPassword() {
         return password;
     }
 
-    public Manager setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+    public Manager setPassword(String password) {this.password = password; return this;}
 
     public OperatoreTelefonico addOperatoreTelefonico(OperatoreTelefonico o, Connection connect){
-        SimpleDateFormat df = new SimpleDateFormat("yyyyy-mm-dd");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         PreparedStatement statement;
         try {
             statement = connect.prepareStatement("INSERT INTO "+ BaseColumns.TAB_OPERATORI_TELEFONICI+
@@ -59,8 +53,5 @@ public class Manager extends Persona{
     }
 
     @Override
-    public String toString() {
-        return "Manager: " +
-                "username: '" + username + '\'';
-    }
+    public String toString() {return "Manager: " + "username: '" + username + '\'';}
 }

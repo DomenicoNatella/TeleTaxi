@@ -8,37 +8,31 @@ import java.util.Date;
 public class Cliente extends Persona {
 
     private int telefono;
-    private String posizioneCorrente;
+    private String posizioneCorrente, codiceCliente;
 
-    public Cliente(String nome, String cognome, Date dataDiNascita, int telefono, String posizioneCorrente) {
+    public Cliente(String codiceCliente, String nome, String cognome, Date dataDiNascita, int telefono, String posizioneCorrente) {
         super(nome, cognome, dataDiNascita);
+        this.codiceCliente = codiceCliente;
         this.telefono = telefono;
         this.posizioneCorrente = posizioneCorrente;
     }
+
+    public String getCodiceCliente() {return codiceCliente;}
+
+    public Cliente setCodiceCliente(String codiceCliente) {this.codiceCliente = codiceCliente;  return this;}
 
     public int getTelefono() {
         return telefono;
     }
 
-    public Cliente setTelefono(int telefono) {
-        this.telefono = telefono;
-        return this;
-    }
+    public Cliente setTelefono(int telefono) {this.telefono = telefono; return this;}
 
     public String getPosizioneCorrente() {
         return posizioneCorrente;
     }
 
-    public Cliente setPosizioneCorrente(String posizioneCorrente) {
-        this.posizioneCorrente = posizioneCorrente;
-        return this;
-    }
-
+    public Cliente setPosizioneCorrente(String posizioneCorrente) {this.posizioneCorrente = posizioneCorrente; return this;}
 
     @Override
-    public String toString() {
-        return "Cliente: " +
-                "telefono:" + telefono +
-                ", posizione corrente:'" + posizioneCorrente + '\'';
-    }
+    public String toString() {return "Cliente: " + "telefono:" + telefono + ", posizione corrente:'" + posizioneCorrente + '\'';}
 }

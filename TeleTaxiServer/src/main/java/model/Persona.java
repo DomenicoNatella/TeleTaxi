@@ -19,33 +19,20 @@ public abstract class Persona {
         return nome;
     }
 
-    public Persona setNome(String nome) {
-        this.nome = nome;
-        return this;
-    }
+    public Persona setNome(String nome) {this.nome = nome; return this;}
 
     public String getCognome() {
         return cognome;
     }
 
-    public Persona setCognome(String cognome) {
-        this.cognome = cognome;
-        return this;
-    }
+    public Persona setCognome(String cognome) {this.cognome = cognome; return this;}
 
     public Date getDataDiNascita() {
         return dataDiNascita;
     }
 
-    public Persona setDataDiNascita(Date dataDiNascita) {
-        this.dataDiNascita = dataDiNascita;
-        return this;
-    }
+    public Persona setDataDiNascita(Date dataDiNascita) {this.dataDiNascita = dataDiNascita; return this;}
 
     @Override
-    public String toString() {
-        return "Persona: nome: '" + nome + '\'' +
-                ", cognome: '" + cognome + '\'' +
-                ", data di nascita: " + dataDiNascita;
-    }
+    public String toString() {return "Persona: nome: '" + nome + '\'' + ", cognome: '" + cognome + '\'' + ", data di nascita: " + dataDiNascita;}
 }

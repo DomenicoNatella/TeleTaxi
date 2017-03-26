@@ -17,18 +17,12 @@ public class Notifica {
         return stato;
     }
 
-    public Notifica setStato(String stato) {
-        this.stato = stato;
-        return this;
-    }
+    public Notifica setStato(String stato) {this.stato = stato; return this;}
 
     public int getTempoNotifica() {
         return tempoNotifica;
     }
 
-    public Notifica setTempoNotifica(int tempoNotifica) {
-        this.tempoNotifica = tempoNotifica;
-        return this;
-    }
+    public Notifica setTempoNotifica(int tempoNotifica) {this.tempoNotifica = tempoNotifica; return this;}
 
 }

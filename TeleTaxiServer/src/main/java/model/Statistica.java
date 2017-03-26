@@ -12,25 +12,17 @@ public class Statistica {
         this.informazioni = informazioni;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
+    public String getTipo() {return tipo;}
 
-    public Statistica setTipo(String tipo) {
-        this.tipo = tipo;
-        return this;
-    }
+    public Statistica setTipo(String tipo) {this.tipo = tipo; return this;}
 
     public String[] getInformazioni() {
         return informazioni;
     }
 
-    public Statistica setInformazioni(String[] informazioni) {
-        this.informazioni = informazioni;
-        return this;
-    }
+    public Statistica setInformazioni(String[] informazioni) {this.informazioni = informazioni; return this;}
 
-    private void invioStatistica(){
-        // da implementare
+    private void invioStatistica(){// da implementare
     }
 }
+

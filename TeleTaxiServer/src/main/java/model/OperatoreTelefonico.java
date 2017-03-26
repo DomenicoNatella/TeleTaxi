@@ -19,23 +19,14 @@ public class OperatoreTelefonico extends Persona {
         return identificativo;
     }
 
-    public OperatoreTelefonico setIdentificativo(String identificativo) {
-        this.identificativo = identificativo;
-        return this;
-    }
+    public OperatoreTelefonico setIdentificativo(String identificativo) {this.identificativo = identificativo; return this;}
 
     public String getPassword() {
         return password;
     }
 
-    public OperatoreTelefonico setPassword(String password) {
-        this.password = password;
-        return this;
-    }
+    public OperatoreTelefonico setPassword(String password) {this.password = password; return this;}
 
     @Override
-    public String toString() {
-        return "OperatoreTelefonico: " +
-                "id:'" + identificativo + '\'';
-    }
+    public String toString() {return "OperatoreTelefonico: " + "id:'" + identificativo + '\'';}
 }

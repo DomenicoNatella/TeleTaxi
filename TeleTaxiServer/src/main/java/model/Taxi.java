@@ -21,46 +21,31 @@ public class Taxi {
         return codice;
     }
 
-    public Taxi setCodice(int codice) {
-        this.codice = codice;
-        return this;
-    }
+    public Taxi setCodice(int codice) {this.codice = codice; return this;}
 
     public String getStato() {
         return stato;
     }
 
-    public Taxi impostaStato(String stato) {
-        this.stato = stato;
-        return this;
-    }
+    public Taxi impostaStato(String stato) {this.stato = stato; return this;}
 
     public String getPosizione() {
         return posizione;
     }
 
-    public Taxi setPosizione(String posizione) {
-        this.posizione = posizione;
-        return this;
-    }
+    public Taxi setPosizione(String posizione) {this.posizione = posizione; return this;}
 
     public String getDestinazione() {
         return destinazione;
     }
 
-    public Taxi setDestinazione(String destinazione) {
-        this.destinazione = destinazione;
-        return this;
-    }
+    public Taxi setDestinazione(String destinazione) {this.destinazione = destinazione; return this;}
 
     public String[] getServiziSpeciali() {
         return serviziSpeciali;
     }
 
-    public Taxi setServiziSpeciali(String[] serviziSpeciali) {
-        this.serviziSpeciali = serviziSpeciali;
-        return this;
-    }
+    public Taxi setServiziSpeciali(String[] serviziSpeciali) {this.serviziSpeciali = serviziSpeciali; return this;}
 
     public void confermaCorsa(){
         // da implementare
@@ -80,10 +65,5 @@ public class Taxi {
     }
 
     @Override
-    public String toString() {
-        return "Taxi: " +
-                "codice: " + codice +
-                ", stato: '" + stato + '\'' +
-                ", serviziSpeciali: " + Arrays.toString(serviziSpeciali);
-    }
+    public String toString() {return "Taxi: " + "codice: " + codice + ", stato: '" + stato + '\'' + ", serviziSpeciali: " + Arrays.toString(serviziSpeciali);}
 }
