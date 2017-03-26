@@ -1,5 +1,6 @@
 package websource;
 
+import control.GestorePrenotazione;
 import org.restlet.Response;
 import org.restlet.data.MediaType;
 import org.restlet.representation.Representation;
@@ -18,6 +19,8 @@ public class DatabaseAttachDefaultResource extends ServerResource{
 
     @Get
     public void getHomePage(){
+        GestorePrenotazione gp = GestorePrenotazione.getInstance();
+
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<html>");
         stringBuilder.append("<head><title>Page not found - " +
