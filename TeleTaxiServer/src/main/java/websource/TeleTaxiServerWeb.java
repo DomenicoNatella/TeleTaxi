@@ -21,7 +21,7 @@ public class TeleTaxiServerWeb extends Application {
         Component component = null;
         try {
             component = new Component();
-            component.getServers().add(Protocol.HTTP, 8080);
+            component.getServers().add(Protocol.HTTP, 80);
             component.getDefaultHost().attach(new TeleTaxiServerWeb());
             component.start();
         } catch (Exception e) {
