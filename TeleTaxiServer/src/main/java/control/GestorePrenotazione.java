@@ -1,15 +1,13 @@
 package control;
 
+import model.Cliente;
+import model.OperatoreTelefonico;
 import model.Prenotazione;
-import model.Taxi;
 import resources.BaseColumns;
 import websource.DatabaseManager;
+import com.google.gson.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.DateFormat;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -18,13 +16,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by dn on 26/03/17.
  */
 public class GestorePrenotazione {
+    private Gson gs;
     private static GestorePrenotazione instance = null;
     private Connection connection;
     private Statement statement;
     private CopyOnWriteArrayList<Prenotazione> prenotazioni;
-    private CopyOnWriteArrayList<Taxi> taxi;
+
 
     public GestorePrenotazione(){
+        gs = new Gson();
+        prenotazioni = new CopyOnWriteArrayList<Prenotazione>();
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
         try {
@@ -42,6 +43,10 @@ public class GestorePrenotazione {
         return instance;
     }
 
+
+
+
+
     public synchronized Prenotazione inserisciPrenotazione(Prenotazione pr){
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         prenotazioni.add(pr);
@@ -52,10 +57,10 @@ public class GestorePrenotazione {
                     BaseColumns.IDENTIFICATIVO_CLIENTE+","+BaseColumns.POSIZIONE_CORRENTE+"," +BaseColumns.SERVIZI_SPECIALI+")"+" VALUES(?,?,?,?,?,?)");
             statement.setString(1,pr.getProgressivo());
             if(pr.getOperatoreTelefonico()!=null) statement.setString(2,pr.getOperatoreTelefonico().getIdentificativo());
-            statement.setString(3, Integer.toString(pr.getTaxi().getCodice()));
+            statement.setInt(3, pr.getTaxi().getCodice());
             statement.setString(4, pr.getCliente().getCodiceCliente());
             statement.setString(5,pr.getCliente().getPosizioneCorrente());
-            statement.setString(6, Arrays.toString(pr.getServiziSpeciali()));
+            statement.setString(6, gs.toJson(pr.getServiziSpeciali()));
             statement.executeUpdate();
            return pr;
         } catch (SQLException e) {
@@ -66,6 +71,7 @@ public class GestorePrenotazione {
 
     public synchronized void eliminaPrenotazione(Prenotazione pr){
         try {
+            prenotazioni.remove(pr);
             String sql = "DELETE FROM "+BaseColumns.TAB_PRENOTAZIONI+" WHERE "+BaseColumns.PROGRESSIVO_PRENOTAZIONE+" = \""+pr.getProgressivo()+"\" ;";
             statement = connection.createStatement();
             statement.execute(sql);
@@ -75,7 +81,7 @@ public class GestorePrenotazione {
         }
     }
 
-    public double richiediPosizioniETempiDiAttesa(){
+    public double richiediPosizioniETempiDiAttesa(Prenotazione pr){
         return 0.0;
     }
 
