@@ -11,7 +11,7 @@ public class Prenotazione {
     private String serviziSpeciali[], progressivo;
     private int tempoAttesa;
 
-    public Prenotazione(Cliente cliente,OperatoreTelefonico operatoreTelefonico, Taxi taxi,String destinazione, String[] serviziSpeciali, String progressivo, int tempoAttesa) {
+    public Prenotazione(String progressivo, Cliente cliente,OperatoreTelefonico operatoreTelefonico, Taxi taxi,String destinazione, String[] serviziSpeciali, int tempoAttesa) {
         this.cliente = cliente;
         this.operatoreTelefonico = operatoreTelefonico;
         this.taxi = taxi;
