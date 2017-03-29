@@ -61,7 +61,7 @@ public class DatabaseManager {
                     " ("+ BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" PRIMARY KEY VARCHAR(255)," +
                     BaseColumns.NOME_PERSONA+" VARCHAR(255)," +
                     BaseColumns.COGNOME_PERSONA+" VARCHAR(255)," +
-                    BaseColumns.DATA_DI_NASCITA_PERSONA+" VARCHAR(255)," +
+                    BaseColumns.DATA_DI_NASCITA_PERSONA+" DATE," +
                     BaseColumns.PASSWORD+" VARCHAR(255) ) ";
             stmt.executeUpdate(sql_area);
 
@@ -69,7 +69,7 @@ public class DatabaseManager {
                     " ("+BaseColumns.IDENTIFICATIVO_CLIENTE+" PRIMARY KEY VARCHAR(255),"+
                     BaseColumns.NOME_PERSONA+" VARCHAR(255),"+
                     BaseColumns.COGNOME_PERSONA+" VARCHAR(255),"+
-                    BaseColumns.DATA_DI_NASCITA_PERSONA+" VARCHAR(255),"+
+                    BaseColumns.DATA_DI_NASCITA_PERSONA+" DATE,"+
                     BaseColumns.TELEFONO+" VARCHAR(255)) ";
             stmt.executeUpdate(sql_cliente);
 
@@ -79,7 +79,8 @@ public class DatabaseManager {
                     BaseColumns.IDENTIFICATIVO_TAXI+" VARCHAR(255)," +
                     BaseColumns.IDENTIFICATIVO_CLIENTE+" FOREIGN KEY VARCHAR(255)," +
                     BaseColumns.POSIZIONE_CORRENTE+" VARCHAR(255)," +
-                    BaseColumns.SERVIZI_SPECIALI+" VARCHAR(255) )";
+                    BaseColumns.SERVIZI_SPECIALI+" VARCHAR(255)," +
+                    BaseColumns.DATA_PRENOTAZIONE+" DATE )";
             stmt.executeUpdate(sql_bike);
 
             String sql_car = "CREATE TABLE "+BaseColumns.TAB_TAXI+
@@ -93,7 +94,7 @@ public class DatabaseManager {
                     " ("+BaseColumns.USERNAME_MANAGER+" PRIMARY KEY VARCHAR(255)," +
                     BaseColumns.NOME_PERSONA+" VARCHAR(255)," +
                     BaseColumns.COGNOME_PERSONA+" VARCHAR(255)," +
-                    BaseColumns.DATA_DI_NASCITA_PERSONA+" VARCHAR(255) ) ";
+                    BaseColumns.DATA_DI_NASCITA_PERSONA+" DATE ) ";
             stmt.executeUpdate(sql_cintea);
 
         } catch ( Exception e ) {
