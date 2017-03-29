@@ -54,13 +54,14 @@ public class GestorePrenotazione {
         try {
             statement = connection.prepareStatement("INSERT INTO "+ BaseColumns.TAB_PRENOTAZIONI+
                     "("+BaseColumns.PROGRESSIVO_PRENOTAZIONE+","+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+","+BaseColumns.IDENTIFICATIVO_TAXI+","+
-                    BaseColumns.IDENTIFICATIVO_CLIENTE+","+BaseColumns.POSIZIONE_CORRENTE+"," +BaseColumns.SERVIZI_SPECIALI+")"+" VALUES(?,?,?,?,?,?)");
+                    BaseColumns.IDENTIFICATIVO_CLIENTE+","+BaseColumns.POSIZIONE_CORRENTE+","+BaseColumns.SERVIZI_SPECIALI+"," +BaseColumns.DATA_PRENOTAZIONE+")"+" VALUES(?,?,?,?,?,?,?)");
             statement.setString(1,pr.getProgressivo());
             if(pr.getOperatoreTelefonico()!=null) statement.setString(2,pr.getOperatoreTelefonico().getIdentificativo());
             statement.setInt(3, pr.getTaxi().getCodice());
             statement.setString(4, pr.getCliente().getCodiceCliente());
             statement.setString(5,pr.getCliente().getPosizioneCorrente());
             statement.setString(6, gs.toJson(pr.getServiziSpeciali()));
+            statement.setDate(7,  java.sql.Date.valueOf(df.format(pr.getData())));
             statement.executeUpdate();
            return pr;
         } catch (SQLException e) {
