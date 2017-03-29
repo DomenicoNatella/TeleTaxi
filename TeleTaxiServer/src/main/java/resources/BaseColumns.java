@@ -19,7 +19,7 @@ public class BaseColumns {
     public static final String TELEFONO = "telefono";
     public static final String POSIZIONE_CORRENTE = "posizione_corrente";
     public static final String SERVIZI_SPECIALI = "servizi_speciali" ;
-
+    public static final String DATA_PRENOTAZIONE = "data";
 
     public static final String TAB_CLIENTE = "clienti";
     public static final String IDENTIFICATIVO_CLIENTE = "codice_cliente" ;
