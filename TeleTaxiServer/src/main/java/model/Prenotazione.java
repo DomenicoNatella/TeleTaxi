@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Date;
+
 /**
  * Created by dn on 26/03/17.
  */
@@ -9,15 +11,18 @@ public class Prenotazione {
     private OperatoreTelefonico operatoreTelefonico;
     private Taxi taxi;
     private String serviziSpeciali[], progressivo;
-    private int tempoAttesa;
+    private double tempoAttesa;
+    private Date data;
 
-    public Prenotazione(String progressivo, Cliente cliente,OperatoreTelefonico operatoreTelefonico, Taxi taxi,String destinazione, String[] serviziSpeciali, int tempoAttesa) {
+    public Prenotazione(String progressivo, Cliente cliente,OperatoreTelefonico operatoreTelefonico, Taxi taxi,String destinazione, String[] serviziSpeciali,
+                        double tempoAttesa, Date data) {
         this.cliente = cliente;
         this.operatoreTelefonico = operatoreTelefonico;
         this.taxi = taxi;
         this.serviziSpeciali = serviziSpeciali;
         this.progressivo = progressivo;
         this.tempoAttesa = tempoAttesa;
+        this.data = data;
     }
 
     public Cliente getCliente() {return cliente;}
@@ -46,11 +51,15 @@ public class Prenotazione {
 
     public Prenotazione setProgressivo(String progressivo) {this.progressivo = progressivo; return this;}
 
-    public int getTempoAttesa() {
+    public double getTempoAttesa() {
         return tempoAttesa;
     }
 
-    public Prenotazione setTempoAttesa(int tempoAttesa) {this.tempoAttesa = tempoAttesa; return this;}
+    public Prenotazione setTempoAttesa(double tempoAttesa) {this.tempoAttesa = tempoAttesa; return this;}
+
+    public Date getData() {return data;}
+
+    public Prenotazione setData(Date data) {this.data = data; return this;}
 
     public boolean configuraNotifica(){
         // da implementare

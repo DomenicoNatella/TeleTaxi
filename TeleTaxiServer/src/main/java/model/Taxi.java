@@ -9,11 +9,11 @@ public class Taxi {
     private int codice;
     private String stato, posizione, destinazione, serviziSpeciali[];
 
-    public Taxi(int codice, String stato, String posizione, String denominazione, String[] serviziSpeciali) {
+    public Taxi(int codice, String stato, String posizione, String destinazione, String[] serviziSpeciali) {
         this.codice = codice;
         this.stato = stato;
         this.posizione = posizione;
-        this.destinazione = denominazione;
+        this.destinazione = destinazione;
         this.serviziSpeciali = serviziSpeciali;
     }
 
