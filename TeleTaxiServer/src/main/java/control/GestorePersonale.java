@@ -1,15 +1,14 @@
 package control;
 
-import model.*;
+import model.Manager;
+import model.OperatoreTelefonico;
 import resources.BaseColumns;
 import websource.DatabaseManager;
-
-import java.util.Arrays;
-import java.util.Date;
 
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**

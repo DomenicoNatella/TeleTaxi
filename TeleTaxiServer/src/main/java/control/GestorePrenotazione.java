@@ -1,15 +1,15 @@
 package control;
 
-import model.Cliente;
-import model.OperatoreTelefonico;
+import com.google.gson.Gson;
 import model.Prenotazione;
 import resources.BaseColumns;
 import websource.DatabaseManager;
-import com.google.gson.*;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
