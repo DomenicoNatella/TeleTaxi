@@ -13,6 +13,7 @@ import java.util.Date;
  */
 public class Manager extends Persona{
     private String username, password;
+    private static Manager instance;
 
     public Manager(String nome, String cognome, Date dataDiNascita, String username, String password) {
         super(nome, cognome, dataDiNascita);
@@ -32,6 +33,11 @@ public class Manager extends Persona{
 
     public Manager setPassword(String password) {this.password = password; return this;}
 
+    public static Manager getInstance(){
+        if(instance==null) return new Manager("Domenico","Natella", null, "admin","admin");
+        else return instance;
+    }
+
     public OperatoreTelefonico addOperatoreTelefonico(OperatoreTelefonico o, Connection connect){
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         PreparedStatement statement;
@@ -42,7 +48,7 @@ public class Manager extends Persona{
             statement.setString(1,o.getIdentificativo());
             statement.setString(2,o.getNome());
             statement.setString(3, o.getCognome());
-            statement.setString(4, df.format(o.getDataDiNascita()));
+            statement.setTimestamp(4, new java.sql.Timestamp(o.getDataDiNascita().getTime()));
             statement.setString(5, o.getPassword());
             statement.executeUpdate();
             return o;
