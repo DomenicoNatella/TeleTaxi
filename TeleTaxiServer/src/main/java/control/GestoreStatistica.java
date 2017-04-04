@@ -80,7 +80,7 @@ public class GestoreStatistica {
         return null;
     }
 
-    private Statistica findClienteByID(String codiceCliente) {
+    public Statistica findClienteByID(String codiceCliente) {
         ArrayList<Cliente> clientiTmp = new ArrayList<Cliente>();
         PreparedStatement statement;
         try{
@@ -102,7 +102,7 @@ public class GestoreStatistica {
     }
 
 
-    private Statistica findTaxiByCodice(int codiceTaxi) {
+    public Statistica findTaxiByCodice(int codiceTaxi) {
         ArrayList<Taxi> taxiTmp = new ArrayList<Taxi>();
         PreparedStatement statement;
         try{
