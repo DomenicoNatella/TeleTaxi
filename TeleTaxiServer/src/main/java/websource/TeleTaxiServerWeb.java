@@ -13,6 +13,10 @@ public class TeleTaxiServerWeb extends Application {
     @Override
     public Restlet createInboundRoot(){
         Router router = new Router(getContext());
+        router.attach("/teleTaxi/operatoretelefonico",DatabaseAttachOperatoreTelefonicoResourceJson.class);
+        router.attach("/teleTaxi/prenotazione", DatabaseAttachPrenotazioneResourceJson.class);
+        router.attach("/teleTaxi/taxi", DatabaseAttachTaxiResourceJson.class);
+        router.attach("/teleTaxi/cliente", DatabaseAttachClienteResourceJson.class);
         router.attachDefault(DatabaseAttachDefaultResource.class);
         return router;
     }
@@ -25,7 +29,7 @@ public class TeleTaxiServerWeb extends Application {
             component.getDefaultHost().attach(new TeleTaxiServerWeb());
             component.start();
         } catch (Exception e) {
-            System.err.println("Errore nell'inizializzazione del WebServer.");
+            System.err.println("Errore nell'inizializzazione del WebServer. "+e.getMessage());
         }
     }
 

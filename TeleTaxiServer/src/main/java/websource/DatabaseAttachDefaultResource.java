@@ -1,6 +1,5 @@
 package websource;
 
-import control.GestorePrenotazione;
 import org.restlet.data.MediaType;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -21,7 +20,8 @@ public class DatabaseAttachDefaultResource extends ServerResource{
         stringBuilder.append("<table border=\"0\">");
         stringBuilder.append("<tr>");
         stringBuilder.append("<td>");
-        stringBuilder.append("<h1>Pagina non trovata</h1>");
+        stringBuilder.append("<h1>Benvenuto - TeleTaxi</h1>");
+        stringBuilder.append("<h2>Pagina in allestimento!</h1>");
         stringBuilder.append("</td>");
         stringBuilder.append("</tr>");
         stringBuilder.append("</table>");
