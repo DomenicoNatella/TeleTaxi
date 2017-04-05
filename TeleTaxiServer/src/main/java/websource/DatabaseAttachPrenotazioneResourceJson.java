@@ -3,9 +3,11 @@ package websource;
 import com.google.gson.Gson;
 import control.GestorePrenotazione;
 import model.Prenotazione;
+import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
+import resources.*;
 
 /**
  * Created by dn on 02/04/17.
@@ -15,15 +17,58 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
     @Get
     public String getPrenotazioni(){
         Gson gson = new Gson();
-        return gson.toJson(GestorePrenotazione.getInstance().getAllPrenotazioni(),Prenotazione[].class);
+        Status toReturn;
+        try {
+            return gson.toJson(GestorePrenotazione.getInstance().getAllPrenotazioni(),Prenotazione[].class);
+        } catch (GetPrenotazioniFailException getPrenotazioniFailException) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL,"FatalError", getPrenotazioniFailException.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn,Status.class);
+        } catch (ConnectionSQLFailException connectionSQLFailException) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", connectionSQLFailException.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn, Status.class);
+        } catch (FindOperatoreFailException findOperatoreFailException) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL,"FatalError", findOperatoreFailException.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn,Status.class);
+        } catch (FindTaxiFailException findTaxiFailException) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_TAXI_FAIL,"FatalError", findTaxiFailException.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn,Status.class);
+        } catch (FindClienteFailException findClienteFailException) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_CLIENTE_FAIL,"FatalError", findClienteFailException.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn,Status.class);
+        }catch (Exception e){
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn, Status.class);
+        }
     }
 
     @Put
     public String createPrenotazione(String body){
         Gson gson = new Gson();
+        Status toReturn;
         Prenotazione toAdd = gson.fromJson(body, Prenotazione.class);
-        GestorePrenotazione.getInstance().inserisciPrenotazione(toAdd);
-        return gson.toJson(toAdd,Prenotazione.class);
+        try {
+            GestorePrenotazione.getInstance().inserisciPrenotazione(toAdd);
+            return gson.toJson(toAdd,Prenotazione.class);
+        } catch (InserisciPrenotazioneFailException inserisciPrenotazioneFail) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL,"FatalError",inserisciPrenotazioneFail.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn,Status.class);
+        } catch (ConnectionSQLFailException connectionSQLFailException) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", connectionSQLFailException.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn, Status.class);
+        }catch (Exception e){
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn, Status.class);
+        }
+
     }
 
 }

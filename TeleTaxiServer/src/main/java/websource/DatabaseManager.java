@@ -1,6 +1,7 @@
 package websource;
 
 import resources.BaseColumns;
+import resources.ConnectionSQLFailException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,12 +18,12 @@ public class DatabaseManager {
     private Statement stmt;
     private String strConnect = "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&INTtech&useSSL=true";
 
-    private DatabaseManager(){
+    private DatabaseManager() throws ConnectionSQLFailException {
         createDatabase();
     }
 
     //singleton
-    public static synchronized DatabaseManager getInstance(){
+    public static synchronized DatabaseManager getInstance() throws ConnectionSQLFailException {
         if(instance==null) instance=new DatabaseManager();
         return instance;
     }
@@ -32,7 +33,7 @@ public class DatabaseManager {
     }
 
     //private method
-    private void createDatabase() {
+    private void createDatabase() throws ConnectionSQLFailException {
         String username = "root";
         String password = "t3l3t4x1";
         try {
@@ -51,16 +52,17 @@ public class DatabaseManager {
                     connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + BaseColumns.DB_NAME + strConnect, username, password);
                     stmt = connect.createStatement();
                 } catch (SQLException exception) {
-                    System.err.println("Errore nella connessione al Database");
+                    throw new ConnectionSQLFailException(exception.getSQLState());
                 }
             }
         } catch (IllegalAccessException e) {
+            throw new ConnectionSQLFailException(e.getMessage());
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            throw new ConnectionSQLFailException(e.getMessage());
         }
     }
 
-    private void createTable() {
+    private void createTable() throws ConnectionSQLFailException {
         try {
             String sql_area = "CREATE TABLE "+BaseColumns.TAB_OPERATORI_TELEFONICI+
                     " ("+ BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" VARCHAR(255) PRIMARY KEY ," +
@@ -108,9 +110,7 @@ public class DatabaseManager {
                     + "("+BaseColumns.IDENTIFICATIVO_CLIENTE+") )";
             stmt.executeUpdate(sql_bike);
         } catch ( Exception e ) {
-            System.err.println(  "Errore creazione tabella DataBaseSystem: " + e.getMessage() );
-            e.printStackTrace();
-            System.exit(0);
+            throw new ConnectionSQLFailException(e.getMessage());
         }
     }
 }
