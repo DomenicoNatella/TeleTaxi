@@ -1,12 +1,13 @@
 package model;
 
 import resources.BaseColumns;
+import resources.ConnectionSQLFailException;
+import resources.InserisciClienteFailException;
 import websource.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,7 +43,7 @@ public class Cliente extends Persona {
 
     public Cliente setPosizioneCorrente(String posizioneCorrente) {this.posizioneCorrente = posizioneCorrente; return this;}
 
-    public void inserisciCliente(){
+    public void inserisciCliente() throws InserisciClienteFailException, ConnectionSQLFailException {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
@@ -58,8 +59,7 @@ public class Cliente extends Persona {
             statement.setInt(5,this.getTelefono());
             statement.executeUpdate();
         } catch (SQLException e) {
-            System.err.print("Exception of SQL");
-            return;
+            throw new InserisciClienteFailException(Integer.toString(e.getErrorCode()));
         }
     }
 

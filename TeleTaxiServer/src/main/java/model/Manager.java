@@ -1,6 +1,7 @@
 package model;
 
 import resources.BaseColumns;
+import resources.InserisciOperatoreFailException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,7 +39,7 @@ public class Manager extends Persona{
         else return instance;
     }
 
-    public OperatoreTelefonico addOperatoreTelefonico(OperatoreTelefonico o, Connection connect){
+    public OperatoreTelefonico addOperatoreTelefonico(OperatoreTelefonico o, Connection connect) throws InserisciOperatoreFailException {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         PreparedStatement statement;
         try {
@@ -53,9 +54,8 @@ public class Manager extends Persona{
             statement.executeUpdate();
             return o;
         } catch (SQLException e) {
-            System.err.print("Exception of SQL"+e.getMessage());
+            throw new InserisciOperatoreFailException(Integer.toString(e.getErrorCode()));
         }
-        return null;
     }
 
     @Override
