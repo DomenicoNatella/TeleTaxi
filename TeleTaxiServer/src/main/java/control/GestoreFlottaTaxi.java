@@ -2,7 +2,7 @@ package control;
 
 import com.google.gson.Gson;
 import model.Taxi;
-import resources.BaseColumns;
+import resources.*;
 import websource.DatabaseManager;
 
 import java.sql.*;
@@ -20,7 +20,7 @@ public class GestoreFlottaTaxi {
     private Statement statement;
     private Gson gson = new Gson();
 
-    public GestoreFlottaTaxi(){
+    public GestoreFlottaTaxi() throws ConnectionSQLFailException {
         taxi = new CopyOnWriteArrayList<Taxi>();
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
@@ -28,18 +28,19 @@ public class GestoreFlottaTaxi {
             if(connection!=null) statement = (Statement) connection.createStatement();
         } catch (SQLException e) {
             System.err.println("Errore nella creazione della connessione in GestorePrenotazione");
+            throw new ConnectionSQLFailException(Integer.toString(e.getErrorCode()));
         }catch (NullPointerException e){
             System.err.println("Nessuna connessione");
         }
     }
 
     //singleton
-    public static synchronized GestoreFlottaTaxi getInstance(){
+    public static synchronized GestoreFlottaTaxi getInstance() throws ConnectionSQLFailException {
         if(instance==null) instance=new GestoreFlottaTaxi();
         return instance;
     }
 
-    public synchronized Taxi[] getAllTaxi(){
+    public synchronized Taxi[] getAllTaxi() throws GetTaxiFailException {
         ArrayList<Taxi> taxiTmp = new ArrayList<Taxi>();
         PreparedStatement statement;
         try{
@@ -54,12 +55,11 @@ public class GestoreFlottaTaxi {
             }
             return taxiTmp.toArray(new Taxi[taxiTmp.size()]);
         }catch (SQLException e){
-            System.err.println(e.getMessage());
+           throw new GetTaxiFailException(Integer.toString(e.getErrorCode()));
         }
-        return null;
     }
 
-    public synchronized Taxi inserisciTaxi(Taxi tx){
+    public synchronized Taxi inserisciTaxi(Taxi tx) throws InserisciTaxiFailException {
         taxi.add(tx);
         PreparedStatement statement;
         try {
@@ -73,12 +73,11 @@ public class GestoreFlottaTaxi {
             statement.executeUpdate();
             return tx;
         } catch (SQLException e) {
-            System.err.print("Exception of SQL");
-            return null;
+            throw new InserisciTaxiFailException(tx.toString());
         }
     }
 
-    public synchronized void eliminaTaxi(Taxi tx){
+    public synchronized void eliminaTaxi(Taxi tx) throws EliminaTaxiFailException {
         try {
             taxi.remove(tx);
             String sql = "DELETE FROM "+BaseColumns.TAB_TAXI+" WHERE "+BaseColumns.IDENTIFICATIVO_TAXI+" = \""+tx.getCodice()+"\" ;";
@@ -86,7 +85,7 @@ public class GestoreFlottaTaxi {
             statement.execute(sql);
             statement.close();
         } catch (SQLException e) {
-            System.err.println("Exception of SQL");
+            throw new EliminaTaxiFailException(tx.toString());
         }
     }
 

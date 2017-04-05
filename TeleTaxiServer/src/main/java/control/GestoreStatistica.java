@@ -2,7 +2,7 @@ package control;
 
 import com.google.gson.Gson;
 import model.*;
-import resources.BaseColumns;
+import resources.*;
 import websource.DatabaseManager;
 
 import java.sql.*;
@@ -24,19 +24,19 @@ public class GestoreStatistica {
     private Gson gs = new Gson();
 
 
-    public GestoreStatistica(){
+    public GestoreStatistica() throws ConnectionSQLFailException {
         statistiche = new CopyOnWriteArrayList<Statistica>();
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
     }
 
     //singleton
-    public static synchronized GestoreStatistica getInstance(){
+    public static synchronized GestoreStatistica getInstance() throws ConnectionSQLFailException {
         if(instance==null) instance=new GestoreStatistica();
         return instance;
     }
 
-    public synchronized Statistica findOperatoreById(String identificatoreOperatore){
+    public synchronized Statistica findOperatoreById(String identificatoreOperatore) throws FindOperatoreFailException {
         ArrayList<OperatoreTelefonico> operatoriTmp = new ArrayList<OperatoreTelefonico>();
         PreparedStatement statement;
         try{
@@ -52,12 +52,11 @@ public class GestoreStatistica {
             }
             return new Statistica(OperatoreTelefonico.class, (OperatoreTelefonico[]) operatoriTmp.toArray());
         }catch (SQLException e){
-            System.err.println(e.getErrorCode());
+            throw new FindOperatoreFailException(Integer.toString(e.getErrorCode()));
         }
-        return null;
     }
 
-    public synchronized Statistica findPrenotazioneByOperatoreEData(String identificatoreOperatore, Date data){
+    public synchronized Statistica findPrenotazioneByOperatoreEData(String identificatoreOperatore, Date data) throws FindPrenotazioneFailException, FindTaxiFailException, FindClienteFailException, FindOperatoreFailException {
         PreparedStatement statement;
         ArrayList<Prenotazione> prenotazioni = new ArrayList<Prenotazione>();
         try{
@@ -75,12 +74,11 @@ public class GestoreStatistica {
             }
             return new Statistica(Prenotazione.class, (Prenotazione[]) prenotazioni.toArray());
         }catch (SQLException e){
-            System.err.println(e.getErrorCode());
+            throw new FindPrenotazioneFailException(Integer.toString(e.getErrorCode()));
         }
-        return null;
     }
 
-    public Statistica findClienteByID(String codiceCliente) {
+    public Statistica findClienteByID(String codiceCliente) throws FindClienteFailException {
         ArrayList<Cliente> clientiTmp = new ArrayList<Cliente>();
         PreparedStatement statement;
         try{
@@ -96,13 +94,12 @@ public class GestoreStatistica {
             }
             return new Statistica(Cliente.class, (Cliente[]) clientiTmp.toArray());
         }catch (SQLException e){
-            System.err.println(e.getErrorCode());
+            throw new FindClienteFailException(Integer.toString(e.getErrorCode()));
         }
-        return null;
     }
 
 
-    public Statistica findTaxiByCodice(int codiceTaxi) {
+    public Statistica findTaxiByCodice(int codiceTaxi) throws FindTaxiFailException {
         ArrayList<Taxi> taxiTmp = new ArrayList<Taxi>();
         PreparedStatement statement;
         try{
@@ -118,8 +115,7 @@ public class GestoreStatistica {
             }
             return new Statistica(Taxi.class, (Taxi[]) taxiTmp.toArray());
         }catch (SQLException e){
-            System.err.println(e.getErrorCode());
+            throw new FindTaxiFailException(Integer.toString(e.getErrorCode()));
         }
-        return null;
     }
 }

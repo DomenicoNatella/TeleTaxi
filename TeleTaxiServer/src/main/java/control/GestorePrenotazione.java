@@ -2,13 +2,12 @@ package control;
 
 import com.google.gson.Gson;
 import model.*;
-import resources.BaseColumns;
+import resources.*;
 import websource.DatabaseManager;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -22,7 +21,7 @@ public class GestorePrenotazione {
     private CopyOnWriteArrayList<Prenotazione> prenotazioni;
 
 
-    public GestorePrenotazione(){
+    public GestorePrenotazione() throws ConnectionSQLFailException {
         gs = new Gson();
         prenotazioni = new CopyOnWriteArrayList<Prenotazione>();
         DatabaseManager db = DatabaseManager.getInstance();
@@ -31,19 +30,19 @@ public class GestorePrenotazione {
            if(connection!=null) statement = (Statement) connection.createStatement();
         } catch (SQLException e) {
             System.err.println("Errore nella creazione della connessione in GestorePrenotazione");
+            throw new ConnectionSQLFailException(Integer.toString(e.getErrorCode()));
         }catch (NullPointerException e){
             System.err.println("Nessuna connessione");
         }
     }
 
     //singleton
-    public static synchronized GestorePrenotazione getInstance(){
+    public static synchronized GestorePrenotazione getInstance() throws ConnectionSQLFailException {
         if(instance==null) instance=new GestorePrenotazione();
         return instance;
     }
 
-
-    public Prenotazione[] getAllPrenotazioni() {
+    public Prenotazione[] getAllPrenotazioni() throws GetPrenotazioniFailException, FindOperatoreFailException, FindTaxiFailException, FindClienteFailException, ConnectionSQLFailException {
         ArrayList<Prenotazione> prenotazionesTmp = new ArrayList<Prenotazione>();
         PreparedStatement statement;
         try{
@@ -64,16 +63,13 @@ public class GestorePrenotazione {
             }
             return (Prenotazione[]) prenotazionesTmp.toArray(new Prenotazione[prenotazionesTmp.size()]);
         }catch (SQLException e){
-            System.err.println(e.getMessage());
+            throw new GetPrenotazioniFailException(Integer.toString(e.getErrorCode()));
         }catch(NullPointerException e){
-            System.err.println("Errore durante l'esecuzione della query "+e.getMessage());
+            throw new GetPrenotazioniFailException(e.getMessage());
         }
-        return null;
     }
 
-
-
-    public synchronized Prenotazione inserisciPrenotazione(Prenotazione pr){
+    public synchronized Prenotazione inserisciPrenotazione(Prenotazione pr) throws InserisciPrenotazioneFailException {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         prenotazioni.add(pr);
         PreparedStatement statement;
@@ -91,12 +87,11 @@ public class GestorePrenotazione {
             statement.executeUpdate();
            return pr;
         } catch (SQLException e) {
-            System.err.print("Exception of SQL");
-            return null;
+            throw new InserisciPrenotazioneFailException(Integer.toString(e.getErrorCode()));
         }
     }
 
-    public synchronized void eliminaPrenotazione(Prenotazione pr){
+    public synchronized void eliminaPrenotazione(Prenotazione pr) throws EliminaPrenotazioneFailException {
         try {
             prenotazioni.remove(pr);
             String sql = "DELETE FROM "+BaseColumns.TAB_PRENOTAZIONI+" WHERE "+BaseColumns.PROGRESSIVO_PRENOTAZIONE+" = \""+pr.getProgressivo()+"\" ;";
@@ -104,12 +99,12 @@ public class GestorePrenotazione {
             statement.execute(sql);
             statement.close();
         } catch (SQLException e) {
-            System.err.println("Exception of SQL in eliminazione prenotazione");
+            throw new EliminaPrenotazioneFailException(Integer.toString(e.getErrorCode()));
         }
     }
 
     public double richiediPosizioniETempiDiAttesa(Prenotazione pr){
-        return 0.0;
+        return pr.getTempoAttesa();
     }
 
 }
