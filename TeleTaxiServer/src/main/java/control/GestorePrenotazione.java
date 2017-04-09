@@ -1,5 +1,6 @@
 package control;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.google.gson.Gson;
 import model.*;
 import resources.*;
@@ -56,10 +57,11 @@ public class GestorePrenotazione {
                 Taxi taxi = (Taxi) GestoreStatistica.getInstance().findTaxiByCodice(identificativoTaxi).getInformazioni();
                 String identificativoCliente = rs.getString(BaseColumns.IDENTIFICATIVO_CLIENTE);
                 Cliente cliente =(Cliente) GestoreStatistica.getInstance().findClienteByID(identificativoCliente).getInformazioni();
-                String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CORRENTE);
+                String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CLIENTE);
+                String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
                 String[] serviziSpeciali = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
                 java.util.Date dataPrenotazione = new java.util.Date(rs.getTimestamp(BaseColumns.DATA_PRENOTAZIONE).getTime());
-                prenotazionesTmp.add(new Prenotazione(progressivoPrenotazione,cliente,operatoreTelefonico,taxi,posizioneCorrente,serviziSpeciali,0.0,dataPrenotazione));
+                prenotazionesTmp.add(new Prenotazione(progressivoPrenotazione,cliente,operatoreTelefonico,taxi,destinazione,serviziSpeciali,posizioneCorrente,0.0,dataPrenotazione));
             }
             return (Prenotazione[]) prenotazionesTmp.toArray(new Prenotazione[prenotazionesTmp.size()]);
         }catch (SQLException e){
@@ -76,12 +78,13 @@ public class GestorePrenotazione {
         try {
             statement = connection.prepareStatement("INSERT INTO "+ BaseColumns.TAB_PRENOTAZIONI+
                     "("+BaseColumns.PROGRESSIVO_PRENOTAZIONE+","+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+","+BaseColumns.IDENTIFICATIVO_TAXI+","+
-                    BaseColumns.IDENTIFICATIVO_CLIENTE+","+BaseColumns.POSIZIONE_CORRENTE+","+BaseColumns.SERVIZI_SPECIALI+"," +BaseColumns.DATA_PRENOTAZIONE+")"+" VALUES(?,?,?,?,?,?,?)");
+                    BaseColumns.IDENTIFICATIVO_CLIENTE+","+BaseColumns.POSIZIONE_CLIENTE+","+BaseColumns.DESTINAZIONE+","+BaseColumns.SERVIZI_SPECIALI+"," +BaseColumns.DATA_PRENOTAZIONE+")"+" VALUES(?,?,?,?,?,?,?,?)");
             statement.setString(1,pr.getProgressivo());
             if(pr.getOperatoreTelefonico()!=null) statement.setString(2,pr.getOperatoreTelefonico().getIdentificativo());
             statement.setInt(3, pr.getTaxi().getCodice());
             statement.setString(4, pr.getCliente().getCodiceCliente());
-            statement.setString(5,pr.getCliente().getPosizioneCorrente());
+            statement.setString(5,pr.getPosizioneCliente());
+            statement.setString(6, pr.getDestinazione());
             statement.setString(6, gs.toJson(pr.getServiziSpeciali()));
             statement.setTimestamp(7,  new Timestamp(pr.getData().getTime()));
             statement.executeUpdate();

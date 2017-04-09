@@ -2,6 +2,7 @@ package control;
 
 import com.google.gson.Gson;
 import model.*;
+import org.restlet.engine.util.Base64;
 import resources.*;
 import websource.DatabaseManager;
 
@@ -36,6 +37,7 @@ public class GestoreStatistica {
         return instance;
     }
 
+
     public synchronized Statistica findOperatoreById(String identificatoreOperatore) throws FindOperatoreFailException {
         ArrayList<OperatoreTelefonico> operatoriTmp = new ArrayList<OperatoreTelefonico>();
         PreparedStatement statement;
@@ -46,7 +48,7 @@ public class GestoreStatistica {
             while(rs.next()){
                 String nome = rs.getString(BaseColumns.NOME_PERSONA);
                 String cognome = rs.getString(BaseColumns.COGNOME_PERSONA);
-                Date dataDiNascita = rs.getDate(BaseColumns.DATA_DI_NASCITA_PERSONA);
+                Date dataDiNascita = rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA);
                 String password = rs.getString(BaseColumns.PASSWORD);
                 operatoriTmp.add(new OperatoreTelefonico(identificatoreOperatore, nome, cognome, dataDiNascita, password));
             }
@@ -67,10 +69,11 @@ public class GestoreStatistica {
                 String progressivo = rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO);
                 int codiceTaxi = rs.getInt(BaseColumns.IDENTIFICATIVO_TAXI);
                 String codiceCliente = rs.getString(BaseColumns.IDENTIFICATIVO_CLIENTE);
-                String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CORRENTE);
+                String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CLIENTE);
+                String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
                 String serviziSpeciali[] = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
                 prenotazioni.add(new Prenotazione(progressivo,((Cliente[]) findClienteByID(codiceCliente).getInformazioni())[0],((OperatoreTelefonico[]) findOperatoreById(identificatoreOperatore).getInformazioni())[0],
-                        ((Taxi[]) (findTaxiByCodice(codiceTaxi).getInformazioni()))[0], posizioneCorrente, serviziSpeciali, 0.0,data));
+                        ((Taxi[]) (findTaxiByCodice(codiceTaxi).getInformazioni()))[0],destinazione,serviziSpeciali,posizioneCorrente, 0.0,data));
             }
             return new Statistica(Prenotazione.class, (Prenotazione[]) prenotazioni.toArray());
         }catch (SQLException e){
@@ -88,9 +91,9 @@ public class GestoreStatistica {
             while(rs.next()){
                 String nome = rs.getString(BaseColumns.NOME_PERSONA);
                 String cognome = rs.getString(BaseColumns.COGNOME_PERSONA);
-                Date dataDiNascita = rs.getDate(BaseColumns.DATA_DI_NASCITA_PERSONA);
+                Date dataDiNascita = rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA);
                 int telefono = rs.getInt(BaseColumns.TELEFONO);
-                clientiTmp.add(new Cliente(codiceCliente, nome, cognome,dataDiNascita, telefono,"N.P."));
+                clientiTmp.add(new Cliente(codiceCliente, nome, cognome,dataDiNascita, telefono));
             }
             return new Statistica(Cliente.class, (Cliente[]) clientiTmp.toArray());
         }catch (SQLException e){

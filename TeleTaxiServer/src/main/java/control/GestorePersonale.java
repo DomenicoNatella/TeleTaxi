@@ -3,6 +3,7 @@ control;
 
 import model.Manager;
 import model.OperatoreTelefonico;
+import org.restlet.engine.util.Base64;
 import resources.*;
 import websource.DatabaseManager;
 
@@ -25,7 +26,7 @@ public class GestorePersonale {
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
 
-    public GestorePersonale() throws ConnectionSQLFailException {
+    public GestorePersonale() throws ConnectionSQLFailException, FindManagerFailException {
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
         try {
@@ -39,7 +40,7 @@ public class GestorePersonale {
         manager = Manager.getInstance();
     }
 
-    public static GestorePersonale getInstance() throws ConnectionSQLFailException {
+    public static GestorePersonale getInstance() throws ConnectionSQLFailException, FindManagerFailException {
         if (instance == null) return instance = new GestorePersonale();
         else return instance;
     }
@@ -84,7 +85,7 @@ public class GestorePersonale {
     }
 
 
-    public synchronized Manager findManager(String usernameManager) throws FindManagerFailException {
+    public synchronized Manager findManager(String usernameManager) throws FindManagerFailException, ConnectionSQLFailException {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_MANAGER + " WHERE " + BaseColumns.USERNAME_MANAGER + " = " + usernameManager);
@@ -105,7 +106,48 @@ public class GestorePersonale {
 
     }
 
+    public synchronized OperatoreTelefonico eliminaOperatoreTelefonico(String identificativo) throws FindOperatoreFailException, EliminaOperatoreTelefonicoFailException {
+        OperatoreTelefonico op = findOperatore(identificativo);
+        OperatoreTelefonico deleted = manager.eliminaOperatoreTelefonico(op);
+        return deleted;
+    }
+
     public synchronized OperatoreTelefonico inserisciOperatoreTelefonico(OperatoreTelefonico op) throws InserisciOperatoreFailException {
-        return manager.addOperatoreTelefonico(op, connection);
+        return manager.addOperatoreTelefonico(op);
+    }
+
+    public synchronized OperatoreTelefonico updateOperatoreTelefonico(OperatoreTelefonico op) throws UpdateOperatoreTelefonicoFailException {
+        try{
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE " + BaseColumns.TAB_OPERATORI_TELEFONICI + " SET "+ BaseColumns.NOME_PERSONA + " = ?," + BaseColumns.COGNOME_PERSONA + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
+                            + BaseColumns.PASSWORD + " = ?," + "WHERE" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
+            ps.setString(1, op.getNome());
+            ps.setString(2, op.getCognome());
+            ps.setTimestamp(3, new java.sql.Timestamp(op.getDataDiNascita().getTime()));
+            ps.setString(4, op.getPassword());
+            ps.setString(5, op.getIdentificativo());
+            for(OperatoreTelefonico operatoreTelefonico: operatoriTelefonici)
+                if(op.getIdentificativo().equalsIgnoreCase(operatoreTelefonico.getIdentificativo()))
+                    operatoriTelefonici.set(operatoriTelefonici.indexOf(operatoreTelefonico), op);
+            return op;
+        }  catch (SQLException e) {
+            throw new UpdateOperatoreTelefonicoFailException(Integer.toString(e.getErrorCode()));
+        }
+    }
+
+    public synchronized Manager updateManager(Manager manager) throws UpdateManagerFailException {
+        try {
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE " + BaseColumns.TAB_MANAGER + " SET "+ BaseColumns.NOME_PERSONA + " = ?," + BaseColumns.COGNOME_PERSONA + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
+                            + BaseColumns.PASSWORD + " = ?," + "WHERE" + BaseColumns.USERNAME_MANAGER + " = ?");
+            ps.setString(1, manager.getNome());
+            ps.setString(2, manager.getCognome());
+            ps.setTimestamp(3, new java.sql.Timestamp(manager.getDataDiNascita().getTime()));
+            ps.setString(4, manager.getPassword());
+            ps.setString(5, manager.getUsername());
+            return manager;
+        }  catch (SQLException e) {
+            throw new UpdateManagerFailException(Integer.toString(e.getErrorCode()));
+        }
     }
 }
