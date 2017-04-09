@@ -9,6 +9,9 @@ public abstract class Persona {
     private String nome, cognome;
     private Date dataDiNascita;
 
+    public Persona(){
+    }
+
     public Persona(String nome, String cognome, Date dataDiNascita) {
         this.nome = nome;
         this.cognome = cognome;

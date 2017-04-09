@@ -7,14 +7,8 @@ import org.restlet.engine.util.Base64;
 import resources.*;
 import websource.DatabaseManager;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.*;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +22,7 @@ public class Manager extends Persona{
     private static Manager instance;
     private Connection connection;
 
-    public Manager(String nome, String cognome, Date dataDiNascita, String username, String password) throws ConnectionSQLFailException {
+    public Manager(String nome, String cognome, Date dataDiNascita, String username, String password) throws ConnectionSQLFailException, InserisciManagerFailException {
         super(nome, cognome, dataDiNascita);
         this.username = username;
         this.password = Base64.encode(password.getBytes(), true);
@@ -44,16 +38,18 @@ public class Manager extends Persona{
                 statement.setString(1,username);
                 statement.setString(2,nome);
                 statement.setString(3, cognome);
-                statement.setTimestamp(4, new java.sql.Timestamp(dataDiNascita.getTime()));
-                statement.setString(5, Base64.encode(password.getBytes(), true));
+                statement.setString(4, Base64.encode(password.getBytes(), true));
+                statement.setTimestamp(5, new java.sql.Timestamp(dataDiNascita.getTime()));
                 statement.executeUpdate();
-                return o;
             } catch (SQLException e) {
                 throw new InserisciManagerFailException(Integer.toString(e.getErrorCode()));
             }
         } catch (NullPointerException e){
             System.err.println("Nessuna connessione");
         }
+    }
+
+    public Manager(){
     }
 
     public String getUsername() {
@@ -74,22 +70,29 @@ public class Manager extends Persona{
        return this;
     }
 
-    public static Manager getInstance() throws ConnectionSQLFailException, FindManagerFailException {
+    public static Manager getInstance() throws ConnectionSQLFailException, FindManagerFailException, InserisciManagerFailException {
         if(instance==null) {
             try {
                 File f = new File("./TeleTaxiServer/conf.dati");
                 Scanner s = new Scanner(f);
                 String initialKey = s.nextLine();
                 if(initialKey.equalsIgnoreCase("true")){
+                    instance = new Manager(s.nextLine(),s.nextLine(), new SimpleDateFormat("dd/MM/yyyy").parse(s.nextLine()), "admin",s.nextLine());
                     f.delete();
                     f.createNewFile();
-                    new PrintStream(f).write("false".getBytes());
-                    return instance = new Manager(s.nextLine(),s.nextLine(), new SimpleDateFormat("dd/MM/yyyy").parse(s.nextLine()), "admin",s.nextLine());
+                    PrintWriter printStream = new PrintWriter(f);
+                    printStream.println("false");
+                    printStream.print(instance.getUsername());
+                    printStream.close();
+                    return instance;
                 }
-                else if(initialKey.equalsIgnoreCase("false"))
-                    return instance = (Manager) GestorePersonale.getInstance().findManager("admin");
-                else
-                    return instance = new Manager("Amministratore","",new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2017"),"admin","admin");
+                else if(initialKey.equalsIgnoreCase("false")){
+                    Manager toReturn =  GestorePersonale.getInstance().findManager(s.nextLine());
+                    if(toReturn != null) return instance = toReturn;
+                    else {
+                        return instance = new Manager("Amministratore","",new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2017"),"admin","admin");
+                    }
+                } else return instance = new Manager("Amministratore","",new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2017"),"admin","admin");
             } catch (FileNotFoundException e) {
                 System.err.println(e.getMessage());
                 System.exit(-1);
@@ -100,6 +103,10 @@ public class Manager extends Persona{
                 return null;
             } catch (IOException e) {
                 System.err.println("Errore I0");
+                System.exit(-1);
+                return null;
+            }catch (Exception e){
+                System.err.println("Errore irreversibile "+e.getMessage());
                 System.exit(-1);
                 return null;
             }

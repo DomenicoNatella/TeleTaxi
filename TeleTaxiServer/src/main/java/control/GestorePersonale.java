@@ -10,6 +10,7 @@ import websource.DatabaseManager;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,12 +22,11 @@ public class GestorePersonale {
     private static GestorePersonale instance = null;
     private Connection connection;
     private Statement statement;
-    private Manager manager;
     private CopyOnWriteArrayList<OperatoreTelefonico> operatoriTelefonici;
     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
 
-    public GestorePersonale() throws ConnectionSQLFailException, FindManagerFailException {
+    public GestorePersonale() throws ConnectionSQLFailException, FindManagerFailException, InserisciManagerFailException {
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
         try {
@@ -37,10 +37,9 @@ public class GestorePersonale {
         } catch (NullPointerException e) {
             System.err.println("Nessuna connessione");
         }
-        manager = Manager.getInstance();
     }
 
-    public static GestorePersonale getInstance() throws ConnectionSQLFailException, FindManagerFailException {
+    public static GestorePersonale getInstance() throws ConnectionSQLFailException, FindManagerFailException, InserisciManagerFailException {
         if (instance == null) return instance = new GestorePersonale();
         else return instance;
     }
@@ -85,35 +84,37 @@ public class GestorePersonale {
     }
 
 
-    public synchronized Manager findManager(String usernameManager) throws FindManagerFailException, ConnectionSQLFailException {
+    public synchronized Manager findManager(String usernameManager) throws FindManagerFailException, ConnectionSQLFailException, InserisciManagerFailException {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_MANAGER + " WHERE " + BaseColumns.USERNAME_MANAGER + " = " + usernameManager);
+            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_MANAGER + " WHERE " + BaseColumns.USERNAME_MANAGER + " = \'" + usernameManager+"\'");
             ResultSet rs = statement.executeQuery();
-            Manager manager = null;
+            Manager manager = new Manager();
             while (rs.next()) {
-                String nome = rs.getString(BaseColumns.NOME_PERSONA);
-                String cognome = rs.getString(BaseColumns.COGNOME_PERSONA);
+                manager.setUsername(usernameManager);
+                manager.setNome(rs.getString(BaseColumns.NOME_PERSONA));
+                manager.setCognome(rs.getString(BaseColumns.COGNOME_PERSONA));
                 Date dataDiNascita = new Date();
                 dataDiNascita.setTime(rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA).getTime());
-                String password = BaseColumns.PASSWORD;
-                manager = new Manager(nome, cognome, dataDiNascita, usernameManager, password);
+                manager.setDataDiNascita(dataDiNascita);
+                manager.setPassword(new String(Base64.decode(rs.getString(BaseColumns.PASSWORD))));
             }
             return manager;
         } catch (SQLException e) {
+            System.err.println(e.getMessage());
             throw new FindManagerFailException(usernameManager);
         }
 
     }
 
-    public synchronized OperatoreTelefonico eliminaOperatoreTelefonico(String identificativo) throws FindOperatoreFailException, EliminaOperatoreTelefonicoFailException {
+    public synchronized OperatoreTelefonico eliminaOperatoreTelefonico(String identificativo) throws FindOperatoreFailException, EliminaOperatoreTelefonicoFailException, InserisciManagerFailException, FindManagerFailException, ConnectionSQLFailException {
         OperatoreTelefonico op = findOperatore(identificativo);
-        OperatoreTelefonico deleted = manager.eliminaOperatoreTelefonico(op);
+        OperatoreTelefonico deleted = Manager.getInstance().eliminaOperatoreTelefonico(op);
         return deleted;
     }
 
-    public synchronized OperatoreTelefonico inserisciOperatoreTelefonico(OperatoreTelefonico op) throws InserisciOperatoreFailException {
-        return manager.addOperatoreTelefonico(op);
+    public synchronized OperatoreTelefonico inserisciOperatoreTelefonico(OperatoreTelefonico op) throws InserisciOperatoreFailException, InserisciManagerFailException, FindManagerFailException, ConnectionSQLFailException {
+        return Manager.getInstance().addOperatoreTelefonico(op);
     }
 
     public synchronized OperatoreTelefonico updateOperatoreTelefonico(OperatoreTelefonico op) throws UpdateOperatoreTelefonicoFailException {
