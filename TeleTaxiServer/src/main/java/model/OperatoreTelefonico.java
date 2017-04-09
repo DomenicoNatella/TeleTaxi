@@ -1,4 +1,6 @@
 package model;
+import org.restlet.engine.util.Base64;
+
 import java.util.Date;
 
 /**
@@ -11,7 +13,7 @@ public class OperatoreTelefonico extends Persona {
     public OperatoreTelefonico(String identificativo, String nome, String cognome, Date dataDiNascita, String password) {
         super(nome, cognome, dataDiNascita);
         this.identificativo = identificativo;
-        this.password = password;
+        this.password = Base64.encode(password.getBytes(), true);
     }
 
     public String getIdentificativo() {
@@ -24,7 +26,7 @@ public class OperatoreTelefonico extends Persona {
         return password;
     }
 
-    public OperatoreTelefonico setPassword(String password) {this.password = password; return this;}
+    public OperatoreTelefonico setPassword(String password) {this.password = Base64.encode(password.getBytes(), true); return this;}
 
     @Override
     public String toString() {return "OperatoreTelefonico: " + "id:'" + identificativo + '\'';}

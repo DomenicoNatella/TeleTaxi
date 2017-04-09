@@ -7,15 +7,18 @@ import java.util.Arrays;
  */
 public class Taxi {
     private int codice;
-    private String stato, posizione, destinazione, serviziSpeciali[];
+    private String stato, destinazione, serviziSpeciali[], posizioneCorrente;
 
-    public Taxi(int codice, String stato, String posizione, String destinazione, String[] serviziSpeciali) {
+    public Taxi(int codice, String stato, String posizioneCorrente, String destinazione, String[] serviziSpeciali) {
         this.codice = codice;
         this.stato = stato;
-        this.posizione = posizione;
+        this.posizioneCorrente = posizioneCorrente;
         this.destinazione = destinazione;
-        this.serviziSpeciali = serviziSpeciali;
-    }
+        this.serviziSpeciali = serviziSpeciali;}
+
+    public String getPosizioneCorrente(){ return posizioneCorrente;}
+
+    public Taxi setPosizioneCorrente(String posizioneCorrente){ this.posizioneCorrente = posizioneCorrente; return this;}
 
     public int getCodice() {
         return codice;
@@ -29,12 +32,6 @@ public class Taxi {
 
     public Taxi impostaStato(String stato) {this.stato = stato; return this;}
 
-    public String getPosizione() {
-        return posizione;
-    }
-
-    public Taxi setPosizione(String posizione) {this.posizione = posizione; return this;}
-
     public String getDestinazione() {
         return destinazione;
     }
@@ -46,23 +43,6 @@ public class Taxi {
     }
 
     public Taxi setServiziSpeciali(String[] serviziSpeciali) {this.serviziSpeciali = serviziSpeciali; return this;}
-
-    public void confermaCorsa(){
-        // da implementare
-    }
-
-    public void rifiutaCorsa(){
-        // da implementare
-    }
-
-    public String inserisciDestinazione(){
-        // da implementare
-        return null;
-    }
-
-    public void riceviNotifica(){
-        // da implementare
-    }
 
     @Override
     public String toString() {return "Taxi: " + "codice: " + codice + ", stato: '" + stato + '\'' + ", serviziSpeciali: " + Arrays.toString(serviziSpeciali);}

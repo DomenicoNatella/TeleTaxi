@@ -17,14 +17,13 @@ import java.util.Date;
 public class Cliente extends Persona {
 
     private int telefono;
-    private String posizioneCorrente, codiceCliente;
+    private String codiceCliente;
     private Connection connection;
 
-    public Cliente(String codiceCliente, String nome, String cognome, Date dataDiNascita, int telefono, String posizioneCorrente) {
+    public Cliente(String codiceCliente, String nome, String cognome, Date dataDiNascita, int telefono) {
         super(nome, cognome, dataDiNascita);
         this.codiceCliente = codiceCliente;
         this.telefono = telefono;
-        this.posizioneCorrente = posizioneCorrente;
     }
 
     public String getCodiceCliente() {return codiceCliente;}
@@ -36,12 +35,6 @@ public class Cliente extends Persona {
     }
 
     public Cliente setTelefono(int telefono) {this.telefono = telefono; return this;}
-
-    public String getPosizioneCorrente() {
-        return posizioneCorrente;
-    }
-
-    public Cliente setPosizioneCorrente(String posizioneCorrente) {this.posizioneCorrente = posizioneCorrente; return this;}
 
     public void inserisciCliente() throws InserisciClienteFailException, ConnectionSQLFailException {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -64,5 +57,5 @@ public class Cliente extends Persona {
     }
 
     @Override
-    public String toString() {return "Cliente: " + "telefono:" + telefono + ", posizione corrente:'" + posizioneCorrente + '\'';}
+    public String toString() {return "Cliente: " + "telefono:" + telefono;}
 }

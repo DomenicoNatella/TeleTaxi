@@ -10,20 +10,30 @@ public class Prenotazione {
     private Cliente cliente;
     private OperatoreTelefonico operatoreTelefonico;
     private Taxi taxi;
-    private String serviziSpeciali[], progressivo;
+    private String serviziSpeciali[], progressivo, posizioneCliente, destinazione;
     private double tempoAttesa;
     private Date data;
 
     public Prenotazione(String progressivo, Cliente cliente,OperatoreTelefonico operatoreTelefonico, Taxi taxi,String destinazione, String[] serviziSpeciali,
-                        double tempoAttesa, Date data) {
+                        String posizioneCliente, double tempoAttesa, Date data) {
         this.cliente = cliente;
         this.operatoreTelefonico = operatoreTelefonico;
         this.taxi = taxi;
         this.serviziSpeciali = serviziSpeciali;
+        this.destinazione = destinazione;
         this.progressivo = progressivo;
         this.tempoAttesa = tempoAttesa;
+        this.posizioneCliente = posizioneCliente;
         this.data = data;
     }
+
+    public String getDestinazione() { return destinazione; }
+
+    public Prenotazione setDestinazione(String destinazione) {this.destinazione = destinazione; return this;}
+
+    public String getPosizioneCliente(){return posizioneCliente;}
+
+    public Prenotazione setPosizioneCliente(String posizioneCliente){this.posizioneCliente = posizioneCliente; return this;}
 
     public Cliente getCliente() {return cliente;}
 
@@ -52,6 +62,7 @@ public class Prenotazione {
     public Prenotazione setProgressivo(String progressivo) {this.progressivo = progressivo; return this;}
 
     public double getTempoAttesa() {
+
         return tempoAttesa;
     }
 
@@ -60,15 +71,5 @@ public class Prenotazione {
     public Date getData() {return data;}
 
     public Prenotazione setData(Date data) {this.data = data; return this;}
-
-    public boolean configuraNotifica(){
-        // da implementare
-        return false;
-    }
-
-    public boolean aggiornaInformazioni(){
-        // da implementare
-        return false;
-    }
 
 }
