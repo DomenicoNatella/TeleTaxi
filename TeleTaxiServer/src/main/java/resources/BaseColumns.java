@@ -16,7 +16,7 @@ public class BaseColumns {
     public static final String TAB_PRENOTAZIONI = "prenotazioni";
     public static final String PROGRESSIVO_PRENOTAZIONE = "progressivo";
     public static final String TELEFONO = "telefono";
-    public static final String POSIZIONE_CORRENTE = "posizione_corrente";
+    public static final String POSIZIONE_CLIENTE = "posizione_cliente" ;
     public static final String SERVIZI_SPECIALI = "servizi_speciali" ;
     public static final String DATA_PRENOTAZIONE = "data";
 
@@ -26,6 +26,7 @@ public class BaseColumns {
     public static final String TAB_TAXI = "taxi";
     public static final String IDENTIFICATIVO_TAXI = "identificativo_taxi";
     public static final String STATO_TAXI = "stato" ;
+    public static final String POSIZIONE_CORRENTE = "posizione_corrente";
     public static final String DESTINAZIONE = "destinazione";
 
     public static final String TAB_MANAGER = "manager";

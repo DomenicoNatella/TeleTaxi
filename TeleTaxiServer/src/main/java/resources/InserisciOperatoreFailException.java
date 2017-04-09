@@ -3,8 +3,8 @@ package resources;
 /**
  * Created by dn on 05/04/17.
  */
-public class InserisciOperatoreFailException extends Throwable {
+public class InserisciOperatoreFailException extends Exception {
     public InserisciOperatoreFailException(String s) {
-        super("Errore nell'inserimento della prenotazione: "+s);
+        super("Errore nell'inserimento dell'operatore: "+s);
     }
 }
