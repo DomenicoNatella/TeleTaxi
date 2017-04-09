@@ -84,6 +84,7 @@ public class DatabaseManager {
                     " ("+ BaseColumns.IDENTIFICATIVO_TAXI+" INTEGER PRIMARY KEY ," +
                     BaseColumns.STATO_TAXI+" VARCHAR(255)," +
                     BaseColumns.DESTINAZIONE+" VARCHAR(255)," +
+                    BaseColumns.POSIZIONE_CORRENTE+" VARCHAR(255)," +
                     BaseColumns.SERVIZI_SPECIALI+" VARCHAR(1000) ) ";
             stmt.executeUpdate(sql_car);
 
@@ -91,6 +92,7 @@ public class DatabaseManager {
                     " ("+BaseColumns.USERNAME_MANAGER+" VARCHAR(255) PRIMARY KEY ," +
                     BaseColumns.NOME_PERSONA+" VARCHAR(255)," +
                     BaseColumns.COGNOME_PERSONA+" VARCHAR(255)," +
+                    BaseColumns.PASSWORD+" VARCHAR(255)," +
                     BaseColumns.DATA_DI_NASCITA_PERSONA+" TIMESTAMP ) ";
             stmt.executeUpdate(sql_cintea);
 
@@ -99,7 +101,8 @@ public class DatabaseManager {
                     BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" VARCHAR(255) ," +
                     BaseColumns.IDENTIFICATIVO_TAXI+" INTEGER," +
                     BaseColumns.IDENTIFICATIVO_CLIENTE+" VARCHAR(255) ," +
-                    BaseColumns.POSIZIONE_CORRENTE+" VARCHAR(255)," +
+                    BaseColumns.POSIZIONE_CLIENTE+" VARCHAR(255)," +
+                    BaseColumns.DESTINAZIONE+" VARCHAR(255)," +
                     BaseColumns.SERVIZI_SPECIALI+" VARCHAR(255)," +
                     BaseColumns.DATA_PRENOTAZIONE+" DATE,"+
                     "FOREIGN KEY ("+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+") REFERENCES "+BaseColumns.TAB_OPERATORI_TELEFONICI
