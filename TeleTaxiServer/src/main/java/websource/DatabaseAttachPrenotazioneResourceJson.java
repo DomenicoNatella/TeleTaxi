@@ -1,10 +1,12 @@
 package websource;
 
 import com.google.gson.Gson;
+import control.GestorePersonale;
 import control.GestorePrenotazione;
 import model.Prenotazione;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import resources.*;
@@ -47,12 +49,12 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
         }
     }
 
-    @Put
+    @Put("json")
     public String createPrenotazione(String body){
         Gson gson = new Gson();
         Status toReturn;
-        Prenotazione toAdd = gson.fromJson(body, Prenotazione.class);
         try {
+            Prenotazione toAdd = gson.fromJson(body, Prenotazione.class);
             GestorePrenotazione.getInstance().inserisciPrenotazione(toAdd);
             return gson.toJson(toAdd,Prenotazione.class);
         } catch (InserisciPrenotazioneFailException inserisciPrenotazioneFail) {
@@ -69,6 +71,25 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
             return gson.toJson(toReturn, Status.class);
         }
 
+    }
+
+    @Post("json")
+    public String updatePrenotazione(String body){
+        Gson gson = new Gson();
+        Status toReturn;
+        try{
+            Prenotazione toUpdate = gson.fromJson(body, Prenotazione.class);
+            GestorePrenotazione.getInstance().updatePrenotazione(toUpdate);
+            return gson.toJson(toUpdate, Prenotazione.class);
+        } catch (UpdatePrenotazioneFailException e) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn, Status.class);
+        } catch (ConnectionSQLFailException e) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return gson.toJson(toReturn, Status.class);
+        }
     }
 
 }

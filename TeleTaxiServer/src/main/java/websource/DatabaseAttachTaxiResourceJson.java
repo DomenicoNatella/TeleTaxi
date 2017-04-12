@@ -16,7 +16,7 @@ import resources.InserisciTaxiFailException;
  * Created by dn on 02/04/17.
  */
 public class DatabaseAttachTaxiResourceJson extends ServerResource {
-    @Get
+    @Get("json")
     public String getTaxi(){
         Gson gson = new Gson();
         Status toReturn;
@@ -37,7 +37,7 @@ public class DatabaseAttachTaxiResourceJson extends ServerResource {
         }
     }
 
-    @Put
+    @Put("json")
     public String createTaxi(String body){
         Gson gson = new Gson();
         Status toReturn;
