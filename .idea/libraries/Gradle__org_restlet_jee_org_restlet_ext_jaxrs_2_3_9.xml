@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.restlet.jee:org.restlet.ext.jaxrs:2.3.9">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.restlet.jee/org.restlet.ext.jaxrs/2.3.9/3ec8b035861b9098c7a03861f4d901239c00bfed/org.restlet.ext.jaxrs-2.3.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.restlet.jee/org.restlet.ext.jaxrs/2.3.9/4f7cd3ae5a891568d72a393def7d8db445161136/org.restlet.ext.jaxrs-2.3.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -106,6 +106,24 @@ public class GestorePrenotazione {
         }
     }
 
+    public synchronized Prenotazione updatePrenotazione(Prenotazione p) throws UpdatePrenotazioneFailException {
+        try {
+            Gson gson = new Gson();
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE " + BaseColumns.TAB_PRENOTAZIONI + " SET " + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?," + BaseColumns.IDENTIFICATIVO_TAXI + " = ?," + BaseColumns.IDENTIFICATIVO_CLIENTE + " = ?,"
+                            + BaseColumns.POSIZIONE_CLIENTE + " = ?,"+BaseColumns.DESTINAZIONE + " = ?,"+ BaseColumns.SERVIZI_SPECIALI + " = ?," + "WHERE" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
+            ps.setString(1, p.getOperatoreTelefonico().getIdentificativo());
+            ps.setInt(2, p.getTaxi().getCodice());
+            ps.setString(3, p.getCliente().getCodiceCliente());
+            ps.setString(4, p.getPosizioneCliente());
+            ps.setString(5, p.getDestinazione());
+            ps.setString(6, gson.toJson(p.getServiziSpeciali(), String[].class));
+            return p;
+        } catch (SQLException e) {
+            throw new UpdatePrenotazioneFailException(Integer.toString(e.getErrorCode()));
+        }
+    }
+
     public double richiediPosizioniETempiDiAttesa(Prenotazione pr){
         return pr.getTempoAttesa();
     }
