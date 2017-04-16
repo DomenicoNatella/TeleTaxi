@@ -1,10 +1,9 @@
 package model;
 
 import control.GestorePersonale;
-import control.GestoreStatistica;
-import jdk.net.SocketFlow;
 import org.restlet.engine.util.Base64;
 import resources.*;
+import resources.exception.*;
 import websource.DatabaseManager;
 
 import java.io.*;
@@ -138,7 +137,7 @@ public class Manager extends Persona{
     public OperatoreTelefonico eliminaOperatoreTelefonico(OperatoreTelefonico op) throws EliminaOperatoreTelefonicoFailException {
         Statement statement;
         try{
-            String sql = "DELETE FROM "+BaseColumns.TAB_OPERATORI_TELEFONICI+" WHERE "+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" = \""+op.getIdentificativo()+"\" ;";
+            String sql = "DELETE FROM "+BaseColumns.TAB_OPERATORI_TELEFONICI+" WHERE "+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" = '"+op.getIdentificativo()+"' ;";
             statement = connection.createStatement();
             statement.execute(sql);
             statement.close();

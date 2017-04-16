@@ -1,22 +1,24 @@
 package model;
 
+import java.util.List;
+
 /**
  * Created by dn on 29/03/17.
  */
 public class Statistica {
-    private Class tipo;
-    private Object[] informazioni;
+    private Class key;
+    private List<?> values;
 
-    public Statistica(Class tipo, Object[] informazioni) {
-        this.tipo = tipo;
-        this.informazioni = informazioni;
+    public Statistica(Class key, List<?> values) {
+        this.key = key;
+        this.values = values;
     }
 
-    public Class getTipo() {return tipo;}
+    public Class getKey() {return key;}
 
-    public Statistica setTipo(Class tipo) {this.tipo = tipo; return this;}
+    public Statistica setKey(Class key) {this.key = key; return this;}
 
-    public Object getInformazioni() {return informazioni;}
+    public List<?> getValues() {return values;}
 
-    public Statistica setInformazioni(Object[] informazioni) {this.informazioni = informazioni; return this;}
+    public Statistica setValues(List<Object> values) {this.values = values; return this;}
 }

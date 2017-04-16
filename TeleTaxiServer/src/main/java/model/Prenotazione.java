@@ -13,9 +13,10 @@ public class Prenotazione {
     private String serviziSpeciali[], progressivo, posizioneCliente, destinazione;
     private double tempoAttesa;
     private Date data;
+    private boolean assegnata;
 
     public Prenotazione(String progressivo, Cliente cliente,OperatoreTelefonico operatoreTelefonico, Taxi taxi,String destinazione, String[] serviziSpeciali,
-                        String posizioneCliente, double tempoAttesa, Date data) {
+                        String posizioneCliente, double tempoAttesa, Date data, boolean assegnata) {
         this.cliente = cliente;
         this.operatoreTelefonico = operatoreTelefonico;
         this.taxi = taxi;
@@ -25,7 +26,12 @@ public class Prenotazione {
         this.tempoAttesa = tempoAttesa;
         this.posizioneCliente = posizioneCliente;
         this.data = data;
+        this.assegnata = assegnata;
     }
+
+    public boolean isAssegnata() {return assegnata;}
+
+    public Prenotazione setAssegnata(boolean assegnata) {this.assegnata = assegnata; return this;}
 
     public String getDestinazione() { return destinazione; }
 
@@ -61,10 +67,7 @@ public class Prenotazione {
 
     public Prenotazione setProgressivo(String progressivo) {this.progressivo = progressivo; return this;}
 
-    public double getTempoAttesa() {
-
-        return tempoAttesa;
-    }
+    public double getTempoAttesa() { return tempoAttesa; }
 
     public Prenotazione setTempoAttesa(double tempoAttesa) {this.tempoAttesa = tempoAttesa; return this;}
 

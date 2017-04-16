@@ -1,8 +1,8 @@
 package model;
 
 import resources.BaseColumns;
-import resources.ConnectionSQLFailException;
-import resources.InserisciClienteFailException;
+import resources.exception.ConnectionSQLFailException;
+import resources.exception.InserisciClienteFailException;
 import websource.DatabaseManager;
 
 import java.sql.Connection;
@@ -48,7 +48,7 @@ public class Cliente extends Persona {
             statement.setString(1,this.getCodiceCliente());
             statement.setString(2,this.getNome());
             statement.setString(3, this.getCognome());
-            statement.setDate(4, java.sql.Date.valueOf(df.format(this.getDataDiNascita())));
+            statement.setTimestamp(4, new java.sql.Timestamp(this.getDataDiNascita().getTime()));
             statement.setInt(5,this.getTelefono());
             statement.executeUpdate();
         } catch (SQLException e) {

@@ -13,6 +13,7 @@ public abstract class Persona {
     }
 
     public Persona(String nome, String cognome, Date dataDiNascita) {
+        super();
         this.nome = nome;
         this.cognome = cognome;
         this.dataDiNascita = dataDiNascita;
