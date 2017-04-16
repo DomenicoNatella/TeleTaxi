@@ -64,7 +64,8 @@ public class GestoreStatistica {
         Taxi min = taxis[0];
         for(Taxi t: taxis){
             if(GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
-                    GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), min.getPosizioneCorrente()) && t != prenotazione.getTaxi())
+                    GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), min.getPosizioneCorrente())
+                    && t != prenotazione.getTaxi() && t.getStato().equalsIgnoreCase("libero"))
                 min = t;
         }
         List<Taxi> toReturn = new ArrayList<Taxi>();

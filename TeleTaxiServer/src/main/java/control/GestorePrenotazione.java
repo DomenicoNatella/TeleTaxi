@@ -95,7 +95,8 @@ public class GestorePrenotazione {
                     + BaseColumns.DATA_PRENOTAZIONE + "," + BaseColumns.PRENOTAZIONE_ASSEGNATA + ")" + " VALUES(?,?,?,?,?,?,?,?,?)");
             statement.setString(1, pr.getProgressivo());
             if (pr.getOperatoreTelefonico() != null) statement.setString(2, pr.getOperatoreTelefonico().getIdentificativo());
-            statement.setInt(3, ((Taxi) (GestoreStatistica.getInstance().findTaxiBetterWaiting(pr).getValues().get(0))).getCodice());
+            Taxi taxi = ((Taxi) (GestoreStatistica.getInstance().findTaxiBetterWaiting(pr).getValues().get(0)));
+            statement.setInt(3, taxi.getCodice());
             statement.setString(4, pr.getCliente().getCodiceCliente());
             statement.setString(5, pr.getPosizioneCliente());
             statement.setString(6, pr.getDestinazione());
@@ -103,6 +104,7 @@ public class GestorePrenotazione {
             statement.setTimestamp(8, new Timestamp(pr.getData().getTime()));
             statement.setString(9, Boolean.toString(pr.isAssegnata()));
             statement.executeUpdate();
+            pr.setTempoAttesa(richiediTempiDiAttesa(pr.getPosizioneCliente(), taxi.getPosizioneCorrente()));
             Thread t = new Thread() {
                 public void run() {
                     try {
@@ -138,7 +140,7 @@ public class GestorePrenotazione {
         }
     }
 
-    public synchronized  Prenotazione updatePrenotazione(Prenotazione p) throws UpdatePrenotazioneFailException {
+    public synchronized  Prenotazione updatePrenotazione(Prenotazione p) throws UpdatePrenotazioneFailException, GetTaxiFailException, FindPrenotazioneFailException, ConnectionSQLFailException {
         try {
             Gson gson = new Gson();
             PreparedStatement ps = connection.prepareStatement(
@@ -155,6 +157,7 @@ public class GestorePrenotazione {
             ps.setString(6, gson.toJson(p.getServiziSpeciali(), String[].class));
             ps.setString(7, Boolean.toString(p.isAssegnata()));
             ps.setString(8, p.getProgressivo());
+            p.setTempoAttesa(richiediTempiDiAttesa(p.getPosizioneCliente(), p.getTaxi().getPosizioneCorrente()));
             for(Prenotazione pr: prenotazioni) if(pr.getProgressivo().equalsIgnoreCase(p.getProgressivo())) prenotazioni.set(prenotazioni.indexOf(pr), p);
             return p;
         } catch (SQLException e) {
