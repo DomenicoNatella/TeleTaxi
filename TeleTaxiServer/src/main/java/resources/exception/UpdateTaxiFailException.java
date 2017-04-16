@@ -1,4 +1,4 @@
-package resources;
+package resources.exception;
 
 /**
  * Created by dn on 09/04/17.
