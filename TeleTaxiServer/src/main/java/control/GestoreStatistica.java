@@ -2,14 +2,15 @@ package control;
 
 import com.google.gson.Gson;
 import model.*;
-import org.restlet.engine.util.Base64;
 import resources.*;
+import resources.exception.*;
 import websource.DatabaseManager;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -39,11 +40,11 @@ public class GestoreStatistica {
 
 
     public synchronized Statistica findOperatoreById(String identificatoreOperatore) throws FindOperatoreFailException {
-        ArrayList<OperatoreTelefonico> operatoriTmp = new ArrayList<OperatoreTelefonico>();
+        List<OperatoreTelefonico> operatoriTmp = new ArrayList<OperatoreTelefonico>();
         PreparedStatement statement;
         try{
             statement = connection.prepareStatement("SELECT * FROM "+BaseColumns.TAB_OPERATORI_TELEFONICI+" WHERE "
-                    +BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" = "+identificatoreOperatore);
+                    +BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" = '"+identificatoreOperatore+"'");
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 String nome = rs.getString(BaseColumns.NOME_PERSONA);
@@ -52,18 +53,32 @@ public class GestoreStatistica {
                 String password = rs.getString(BaseColumns.PASSWORD);
                 operatoriTmp.add(new OperatoreTelefonico(identificatoreOperatore, nome, cognome, dataDiNascita, password));
             }
-            return new Statistica(OperatoreTelefonico.class, (OperatoreTelefonico[]) operatoriTmp.toArray());
+            return new Statistica(OperatoreTelefonico.class, operatoriTmp);
         }catch (SQLException e){
             throw new FindOperatoreFailException(Integer.toString(e.getErrorCode()));
         }
     }
 
-    public synchronized Statistica findPrenotazioneByOperatoreEData(String identificatoreOperatore, Date data) throws FindPrenotazioneFailException, FindTaxiFailException, FindClienteFailException, FindOperatoreFailException {
+    public synchronized Statistica findTaxiBetterWaiting(Prenotazione prenotazione) throws ConnectionSQLFailException, GetTaxiFailException, FindPrenotazioneFailException {
+        Taxi[] taxis = GestoreFlottaTaxi.getInstance().getAllTaxi();
+        Taxi min = taxis[0];
+        for(Taxi t: taxis){
+            if(GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
+                    GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), min.getPosizioneCorrente()) && t != prenotazione.getTaxi())
+                min = t;
+        }
+        List<Taxi> toReturn = new ArrayList<Taxi>();
+        toReturn.add(min);
+        return new Statistica(Taxi.class, toReturn);
+    }
+
+    public synchronized Statistica findPrenotazioneByOperatoreEData(String identificatoreOperatore, Date data)
+            throws FindPrenotazioneFailException, FindTaxiFailException, FindClienteFailException, FindOperatoreFailException {
         PreparedStatement statement;
         ArrayList<Prenotazione> prenotazioni = new ArrayList<Prenotazione>();
         try{
             statement = connection.prepareStatement("SELECT * FROM "+BaseColumns.TAB_PRENOTAZIONI+" WHERE "
-                    +BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" = "+identificatoreOperatore+" AND "+BaseColumns.DATA_PRENOTAZIONE+" = "+data);
+                    +BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" = '"+identificatoreOperatore+"' AND "+BaseColumns.DATA_PRENOTAZIONE+" = "+data);
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 String progressivo = rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO);
@@ -72,10 +87,12 @@ public class GestoreStatistica {
                 String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CLIENTE);
                 String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
                 String serviziSpeciali[] = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
-                prenotazioni.add(new Prenotazione(progressivo,((Cliente[]) findClienteByID(codiceCliente).getInformazioni())[0],((OperatoreTelefonico[]) findOperatoreById(identificatoreOperatore).getInformazioni())[0],
-                        ((Taxi[]) (findTaxiByCodice(codiceTaxi).getInformazioni()))[0],destinazione,serviziSpeciali,posizioneCorrente, 0.0,data));
+                boolean assegnata = Boolean.getBoolean(rs.getString(BaseColumns.PRENOTAZIONE_ASSEGNATA));
+                prenotazioni.add(new Prenotazione(progressivo,(Cliente) findClienteByID(codiceCliente).getValues().get(0),
+                        (OperatoreTelefonico) findOperatoreById(identificatoreOperatore).getValues().get(0),
+                        (Taxi) findTaxiByCodice(codiceTaxi).getValues().get(0),destinazione,serviziSpeciali,posizioneCorrente, 0.0,data,assegnata));
             }
-            return new Statistica(Prenotazione.class, (Prenotazione[]) prenotazioni.toArray());
+            return new Statistica(Prenotazione.class, prenotazioni);
         }catch (SQLException e){
             throw new FindPrenotazioneFailException(Integer.toString(e.getErrorCode()));
         }
@@ -86,7 +103,7 @@ public class GestoreStatistica {
         PreparedStatement statement;
         try{
             statement = connection.prepareStatement("SELECT * FROM "+BaseColumns.TAB_CLIENTE+" WHERE "
-                    +BaseColumns.IDENTIFICATIVO_CLIENTE+" = "+codiceCliente);
+                    +BaseColumns.IDENTIFICATIVO_CLIENTE+" = '"+codiceCliente+"'");
             ResultSet rs = statement.executeQuery();
             while(rs.next()){
                 String nome = rs.getString(BaseColumns.NOME_PERSONA);
@@ -95,7 +112,7 @@ public class GestoreStatistica {
                 int telefono = rs.getInt(BaseColumns.TELEFONO);
                 clientiTmp.add(new Cliente(codiceCliente, nome, cognome,dataDiNascita, telefono));
             }
-            return new Statistica(Cliente.class, (Cliente[]) clientiTmp.toArray());
+            return new Statistica(Cliente.class, clientiTmp);
         }catch (SQLException e){
             throw new FindClienteFailException(Integer.toString(e.getErrorCode()));
         }
@@ -113,10 +130,10 @@ public class GestoreStatistica {
                 String stato = rs.getString(BaseColumns.STATO_TAXI);
                 String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
                 String[] serviziSpeciali = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
-                String password = rs.getString(BaseColumns.PASSWORD);
-                taxiTmp.add(new Taxi(codiceTaxi, stato, "N.P.",destinazione, serviziSpeciali));
+                String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CORRENTE);
+                taxiTmp.add(new Taxi(codiceTaxi, stato, posizioneCorrente,destinazione, serviziSpeciali));
             }
-            return new Statistica(Taxi.class, (Taxi[]) taxiTmp.toArray());
+            return new Statistica(Taxi.class, taxiTmp);
         }catch (SQLException e){
             throw new FindTaxiFailException(Integer.toString(e.getErrorCode()));
         }

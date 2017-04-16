@@ -1,9 +1,9 @@
 package control;
 
 import com.google.gson.Gson;
-import model.OperatoreTelefonico;
 import model.Taxi;
 import resources.*;
+import resources.exception.*;
 import websource.DatabaseManager;
 
 import java.sql.*;
@@ -66,12 +66,14 @@ public class GestoreFlottaTaxi {
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement("INSERT INTO "+ BaseColumns.TAB_TAXI+
-                    "("+BaseColumns.IDENTIFICATIVO_TAXI+","+BaseColumns.SERVIZI_SPECIALI+","+BaseColumns.DESTINAZIONE+","+
-                    BaseColumns.STATO_TAXI+")"+" VALUES(?,?,?,?)");
+                    "("+BaseColumns.IDENTIFICATIVO_TAXI+","+BaseColumns.SERVIZI_SPECIALI+","+BaseColumns.DESTINAZIONE+","+ BaseColumns.POSIZIONE_CORRENTE+","+
+                    BaseColumns.STATO_TAXI+")"+" VALUES(?,?,?,?,?)");
             statement.setInt(1, tx.getCodice());
             statement.setString(2, gson.toJson(tx.getServiziSpeciali(), String[].class));
             statement.setString(3, tx.getDestinazione());
-            statement.setString(4, tx.getStato());
+            statement.setString(4, tx.getPosizioneCorrente());
+            statement.setString(5, tx.getStato());
+
             statement.executeUpdate();
             return tx;
         } catch (SQLException e) {
@@ -82,7 +84,7 @@ public class GestoreFlottaTaxi {
     public synchronized void eliminaTaxi(Taxi tx) throws EliminaTaxiFailException {
         try {
             taxi.remove(tx);
-            String sql = "DELETE FROM "+BaseColumns.TAB_TAXI+" WHERE "+BaseColumns.IDENTIFICATIVO_TAXI+" = \""+tx.getCodice()+"\" ;";
+            String sql = "DELETE FROM "+BaseColumns.TAB_TAXI+" WHERE "+BaseColumns.IDENTIFICATIVO_TAXI+" = "+tx.getCodice()+" ;";
             statement = connection.createStatement();
             statement.execute(sql);
             statement.close();
@@ -95,7 +97,7 @@ public class GestoreFlottaTaxi {
         try{
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE " + BaseColumns.TAB_TAXI + " SET "+ BaseColumns.STATO_TAXI + " = ?," + BaseColumns.DESTINAZIONE + " = ?," + BaseColumns.POSIZIONE_CORRENTE + " = ?,"
-                            + BaseColumns.SERVIZI_SPECIALI + " = ?," + "WHERE" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
+                            + BaseColumns.SERVIZI_SPECIALI + " = ?," + " WHERE " + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
             ps.setString(1, tx.getStato());
             ps.setString(2, tx.getDestinazione());
             ps.setString(3, tx.getPosizioneCorrente());

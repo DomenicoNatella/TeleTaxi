@@ -5,12 +5,12 @@ import model.Manager;
 import model.OperatoreTelefonico;
 import org.restlet.engine.util.Base64;
 import resources.*;
+import resources.exception.*;
 import websource.DatabaseManager;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -67,7 +67,8 @@ public class GestorePersonale {
     public synchronized OperatoreTelefonico findOperatore(String identificativoOperatore) throws FindOperatoreFailException {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_OPERATORI_TELEFONICI + " WHERE " + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = " + identificativoOperatore);
+            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_OPERATORI_TELEFONICI + " WHERE " +
+                    BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = '" + identificativoOperatore+"'");
             ResultSet rs = statement.executeQuery();
             OperatoreTelefonico op = null;
             while (rs.next()) {
@@ -87,7 +88,7 @@ public class GestorePersonale {
     public synchronized Manager findManager(String usernameManager) throws FindManagerFailException, ConnectionSQLFailException, InserisciManagerFailException {
         PreparedStatement statement;
         try {
-            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_MANAGER + " WHERE " + BaseColumns.USERNAME_MANAGER + " = \'" + usernameManager+"\'");
+            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_MANAGER + " WHERE " + BaseColumns.USERNAME_MANAGER + " = '" + usernameManager+"'");
             ResultSet rs = statement.executeQuery();
             Manager manager = new Manager();
             while (rs.next()) {
@@ -107,20 +108,23 @@ public class GestorePersonale {
 
     }
 
-    public synchronized OperatoreTelefonico eliminaOperatoreTelefonico(String identificativo) throws FindOperatoreFailException, EliminaOperatoreTelefonicoFailException, InserisciManagerFailException, FindManagerFailException, ConnectionSQLFailException {
+    public synchronized OperatoreTelefonico eliminaOperatoreTelefonico(String identificativo)
+            throws FindOperatoreFailException, EliminaOperatoreTelefonicoFailException, InserisciManagerFailException, FindManagerFailException, ConnectionSQLFailException {
         OperatoreTelefonico op = findOperatore(identificativo);
         OperatoreTelefonico deleted = Manager.getInstance().eliminaOperatoreTelefonico(op);
         return deleted;
     }
 
-    public synchronized OperatoreTelefonico inserisciOperatoreTelefonico(OperatoreTelefonico op) throws InserisciOperatoreFailException, InserisciManagerFailException, FindManagerFailException, ConnectionSQLFailException {
+    public synchronized OperatoreTelefonico inserisciOperatoreTelefonico(OperatoreTelefonico op)
+            throws InserisciOperatoreFailException, InserisciManagerFailException, FindManagerFailException, ConnectionSQLFailException {
         return Manager.getInstance().addOperatoreTelefonico(op);
     }
 
     public synchronized OperatoreTelefonico updateOperatoreTelefonico(OperatoreTelefonico op) throws UpdateOperatoreTelefonicoFailException {
         try{
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE " + BaseColumns.TAB_OPERATORI_TELEFONICI + " SET "+ BaseColumns.NOME_PERSONA + " = ?," + BaseColumns.COGNOME_PERSONA + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
+                    "UPDATE " + BaseColumns.TAB_OPERATORI_TELEFONICI + " SET "+ BaseColumns.NOME_PERSONA + " = ?," +
+                            BaseColumns.COGNOME_PERSONA + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
                             + BaseColumns.PASSWORD + " = ?," + "WHERE" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
             ps.setString(1, op.getNome());
             ps.setString(2, op.getCognome());
@@ -139,8 +143,9 @@ public class GestorePersonale {
     public synchronized Manager updateManager(Manager manager) throws UpdateManagerFailException {
         try {
             PreparedStatement ps = connection.prepareStatement(
-                    "UPDATE " + BaseColumns.TAB_MANAGER + " SET "+ BaseColumns.NOME_PERSONA + " = ?," + BaseColumns.COGNOME_PERSONA + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
-                            + BaseColumns.PASSWORD + " = ?," + "WHERE" + BaseColumns.USERNAME_MANAGER + " = ?");
+                    "UPDATE " + BaseColumns.TAB_MANAGER + " SET "+ BaseColumns.NOME_PERSONA + " = ?," + BaseColumns.COGNOME_PERSONA
+                            + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
+                            + BaseColumns.PASSWORD + " = ?," + " WHERE " + BaseColumns.USERNAME_MANAGER + " = ?");
             ps.setString(1, manager.getNome());
             ps.setString(2, manager.getCognome());
             ps.setTimestamp(3, new java.sql.Timestamp(manager.getDataDiNascita().getTime()));
