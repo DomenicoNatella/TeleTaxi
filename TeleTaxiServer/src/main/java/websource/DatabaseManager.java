@@ -1,7 +1,7 @@
 package websource;
 
 import resources.BaseColumns;
-import resources.ConnectionSQLFailException;
+import resources.exception.ConnectionSQLFailException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -104,7 +104,8 @@ public class DatabaseManager {
                     BaseColumns.POSIZIONE_CLIENTE+" VARCHAR(255)," +
                     BaseColumns.DESTINAZIONE+" VARCHAR(255)," +
                     BaseColumns.SERVIZI_SPECIALI+" VARCHAR(255)," +
-                    BaseColumns.DATA_PRENOTAZIONE+" DATE,"+
+                    BaseColumns.PRENOTAZIONE_ASSEGNATA+" VARCHAR(6),"+
+                    BaseColumns.DATA_PRENOTAZIONE+" TIMESTAMP ,"+
                     "FOREIGN KEY ("+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+") REFERENCES "+BaseColumns.TAB_OPERATORI_TELEFONICI
                     + "("+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+"),"+
                     "FOREIGN KEY ("+BaseColumns.IDENTIFICATIVO_TAXI+") REFERENCES "+BaseColumns.TAB_TAXI

@@ -11,10 +11,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
-import resources.*;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import resources.exception.*;
 
 /**
  * Created by dn on 02/04/17.

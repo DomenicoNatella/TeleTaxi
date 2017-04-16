@@ -5,8 +5,8 @@ import model.Cliente;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.restlet.data.Status;
-import resources.ErrorCodes;
-import resources.InserisciClienteFailException;
+import resources.exception.ErrorCodes;
+import resources.exception.InserisciClienteFailException;
 
 /**
  * Created by dn on 03/04/17.
@@ -25,7 +25,8 @@ public class DatabaseAttachClienteResourceJson extends ServerResource {
             setStatus(toReturn);
             return gson.toJson(toReturn,Status.class);
         }catch (Exception e){
-            toReturn = new Status(ErrorCodes.ECCEZIONE_CLIENTE_FAIL, "FatalError", e.getMessage());
+            toReturn = new Status(ErrorCodes.ECCEZIONE_CLIENTE_FAIL, "FatalError", e.getLocalizedMessage());
+            e.printStackTrace();
             setStatus(toReturn);
             return gson.toJson(toReturn, Status.class);
         }

@@ -7,10 +7,10 @@ import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
-import resources.ConnectionSQLFailException;
-import resources.ErrorCodes;
-import resources.GetTaxiFailException;
-import resources.InserisciTaxiFailException;
+import resources.exception.ConnectionSQLFailException;
+import resources.exception.ErrorCodes;
+import resources.exception.GetTaxiFailException;
+import resources.exception.InserisciTaxiFailException;
 
 /**
  * Created by dn on 02/04/17.

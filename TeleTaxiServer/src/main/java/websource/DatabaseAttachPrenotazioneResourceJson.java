@@ -1,7 +1,6 @@
 package websource;
 
 import com.google.gson.Gson;
-import control.GestorePersonale;
 import control.GestorePrenotazione;
 import model.Prenotazione;
 import org.restlet.data.Status;
@@ -9,14 +8,14 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
-import resources.*;
+import resources.exception.*;
 
 /**
  * Created by dn on 02/04/17.
  */
 public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
 
-    @Get
+    @Get("json")
     public String getPrenotazioni(){
         Gson gson = new Gson();
         Status toReturn;
@@ -66,6 +65,7 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
             setStatus(toReturn);
             return gson.toJson(toReturn, Status.class);
         }catch (Exception e){
+            e.printStackTrace();
             toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
             return gson.toJson(toReturn, Status.class);
