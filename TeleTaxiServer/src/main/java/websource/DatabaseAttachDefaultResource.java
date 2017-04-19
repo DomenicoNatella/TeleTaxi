@@ -10,7 +10,7 @@ import org.restlet.resource.ServerResource;
  */
 public class DatabaseAttachDefaultResource extends ServerResource{
 
-    @Get
+    @Get("html")
     public void getHomePage(){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<html>");

@@ -20,9 +20,9 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
 
     @Get("json")
     public String getOperatori(){
-        Gson gson = new Gson();
         Status toReturn;
         try {
+            Gson gson = new Gson();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
             if(m.getPassword().equalsIgnoreCase(series.getFirstValue("Authorization")))
@@ -30,28 +30,28 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
             else {
                 toReturn = new Status(Status.CLIENT_ERROR_UNAUTHORIZED, "FatalError", "Errore di autenticazione");
                 setStatus(toReturn);
-                return gson.toJson(toReturn, Status.class);
+                return new Gson().toJson(toReturn, Status.class);
             }
         } catch (GetOperatoriTelefoniciFailException getOperatoriTelefoniciFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_OPERATORE_FAIL, "FatalError", getOperatoriTelefoniciFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (ConnectionSQLFailException connectionSQLFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", connectionSQLFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (Exception e){
             toReturn = new Status(ErrorCodes.ECCEZIONE_OPERATORE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 
     @Put("json")
     public String createOperatoreTelefonico(String body) {
-        Gson gson = new Gson();
         Status toReturn;
         try {
+            Gson gson = new Gson();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             if(Manager.getInstance().getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {
                 OperatoreTelefonico toAdd = gson.fromJson(body, OperatoreTelefonico.class);
@@ -60,28 +60,28 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
             }else {
                 toReturn = new Status(Status.CLIENT_ERROR_UNAUTHORIZED, "FatalError", "Errore di autenticazione");
                 setStatus(toReturn);
-                return gson.toJson(toReturn, Status.class);
+                return new Gson().toJson(toReturn, Status.class);
             }
         } catch (ConnectionSQLFailException connectionSQLFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", connectionSQLFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (InserisciOperatoreFailException inserisciOperatoreFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_OPERATORE_FAIL, "FatalError", inserisciOperatoreFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (Exception e){
             toReturn = new Status(ErrorCodes.ECCEZIONE_OPERATORE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 
     @Post("json")
     public String updateOperatoreTelefonico(String body){
-        Gson gson = new Gson();
         Status toReturn;
         try{
+            Gson gson = new Gson();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             if(Manager.getInstance().getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {
                 OperatoreTelefonico toUpdate = gson.fromJson(body, OperatoreTelefonico.class);
@@ -95,19 +95,23 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
         } catch (ConnectionSQLFailException e) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (FindManagerFailException e) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_OPERATORE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (InserisciManagerFailException e) {
             toReturn = new Status(Status.CLIENT_ERROR_UNAUTHORIZED, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (UpdateOperatoreTelefonicoFailException e) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_OPERATORE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
+        } catch (Exception e) {
+            toReturn = new Status(Status.CLIENT_ERROR_BAD_REQUEST, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 

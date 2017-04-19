@@ -18,7 +18,7 @@ public class Cliente extends Persona {
 
     private int telefono;
     private String codiceCliente;
-    private Connection connection;
+    private Connection connection = null;
 
     public Cliente(String codiceCliente, String nome, String cognome, Date dataDiNascita, int telefono) {
         super(nome, cognome, dataDiNascita);
@@ -38,10 +38,10 @@ public class Cliente extends Persona {
 
     public void inserisciCliente() throws InserisciClienteFailException, ConnectionSQLFailException {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        DatabaseManager db = DatabaseManager.getInstance();
-        connection = db.getConnection();
-        PreparedStatement statement;
         try {
+            DatabaseManager db = DatabaseManager.getInstance();
+            connection = db.getConnection();
+            PreparedStatement statement;
             statement = connection.prepareStatement("INSERT INTO "+ BaseColumns.TAB_CLIENTE+
                     "("+BaseColumns.IDENTIFICATIVO_CLIENTE+","+BaseColumns.NOME_PERSONA+","+BaseColumns.COGNOME_PERSONA+","+
                     BaseColumns.DATA_DI_NASCITA_PERSONA+","+BaseColumns.TELEFONO+")"+" VALUES(?,?,?,?,?)");
@@ -53,6 +53,8 @@ public class Cliente extends Persona {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new InserisciClienteFailException(Integer.toString(e.getErrorCode()));
+        } catch (Exception e) {
+            System.err.println("Errore: " + e.getMessage());
         }
     }
 

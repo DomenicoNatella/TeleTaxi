@@ -8,13 +8,16 @@ import java.util.Arrays;
 public class Taxi {
     private int codice;
     private String stato, destinazione, serviziSpeciali[], posizioneCorrente;
+    private Prenotazione prenotazione;
 
-    public Taxi(int codice, String stato, String posizioneCorrente, String destinazione, String[] serviziSpeciali) {
+    public Taxi(int codice, String stato, String posizioneCorrente, String destinazione, String[] serviziSpeciali, Prenotazione prenotazione) {
         this.codice = codice;
         this.stato = stato;
         this.posizioneCorrente = posizioneCorrente;
         this.destinazione = destinazione;
-        this.serviziSpeciali = serviziSpeciali;}
+        this.serviziSpeciali = serviziSpeciali;
+        this.prenotazione = prenotazione;
+    }
 
     public String getPosizioneCorrente(){ return posizioneCorrente;}
 
@@ -43,6 +46,15 @@ public class Taxi {
     }
 
     public Taxi setServiziSpeciali(String[] serviziSpeciali) {this.serviziSpeciali = serviziSpeciali; return this;}
+
+    public Prenotazione getPrenotazione() {
+        return prenotazione;
+    }
+
+    public Taxi setPrenotazione(Prenotazione prenotazione) {
+        this.prenotazione = prenotazione;
+        return this;
+    }
 
     @Override
     public String toString() {return "Taxi: " + "codice: " + codice + ", stato: '" + stato + '\'' + ", serviziSpeciali: " + Arrays.toString(serviziSpeciali);}

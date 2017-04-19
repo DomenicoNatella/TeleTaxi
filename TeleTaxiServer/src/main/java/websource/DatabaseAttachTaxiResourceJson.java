@@ -18,45 +18,46 @@ import resources.exception.InserisciTaxiFailException;
 public class DatabaseAttachTaxiResourceJson extends ServerResource {
     @Get("json")
     public String getTaxi(){
-        Gson gson = new Gson();
         Status toReturn;
+        Gson gson;
         try {
+            gson = new Gson();
             return gson.toJson(GestoreFlottaTaxi.getInstance().getAllTaxi(), Taxi[].class);
         } catch (GetTaxiFailException getTaxiFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_TAXI_FAIL,"FatalError", getTaxiFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn,Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (ConnectionSQLFailException connectionSQLFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", connectionSQLFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         }catch (Exception e){
             toReturn = new Status(ErrorCodes.ECCEZIONE_TAXI_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 
     @Put("json")
     public String createTaxi(String body){
-        Gson gson = new Gson();
         Status toReturn;
-        Taxi toAdd = gson.fromJson(body, Taxi.class);
         try {
+            Gson gson = new Gson();
+            Taxi toAdd = gson.fromJson(body, Taxi.class);
             GestoreFlottaTaxi.getInstance().inserisciTaxi(toAdd);
-            return gson.toJson(toAdd,Taxi.class);
+            return new Gson().toJson(toAdd, Taxi.class);
         } catch (InserisciTaxiFailException inserisciTaxiFail) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_TAXI_FAIL,"FatalError",inserisciTaxiFail.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn,Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         } catch (ConnectionSQLFailException connectionSQLFailException) {
             toReturn = new Status(ErrorCodes.ECCEZIONE_CONNESSIONE_FAIL, "FatalError", connectionSQLFailException.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         }catch (Exception e){
             toReturn = new Status(ErrorCodes.ECCEZIONE_TAXI_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
-            return gson.toJson(toReturn, Status.class);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 }

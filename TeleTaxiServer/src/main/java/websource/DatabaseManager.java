@@ -59,6 +59,8 @@ public class DatabaseManager {
             throw new ConnectionSQLFailException(e.getMessage());
         } catch (InstantiationException e) {
             throw new ConnectionSQLFailException(e.getMessage());
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
     }
 
@@ -80,14 +82,6 @@ public class DatabaseManager {
                     BaseColumns.TELEFONO+" INTEGER ) ";
             stmt.executeUpdate(sql_cliente);
 
-            String sql_car = "CREATE TABLE "+BaseColumns.TAB_TAXI+
-                    " ("+ BaseColumns.IDENTIFICATIVO_TAXI+" INTEGER PRIMARY KEY ," +
-                    BaseColumns.STATO_TAXI+" VARCHAR(255)," +
-                    BaseColumns.DESTINAZIONE+" VARCHAR(255)," +
-                    BaseColumns.POSIZIONE_CORRENTE+" VARCHAR(255)," +
-                    BaseColumns.SERVIZI_SPECIALI+" VARCHAR(1000) ) ";
-            stmt.executeUpdate(sql_car);
-
             String sql_cintea = "CREATE TABLE "+BaseColumns.TAB_MANAGER+
                     " ("+BaseColumns.USERNAME_MANAGER+" VARCHAR(255) PRIMARY KEY ," +
                     BaseColumns.NOME_PERSONA+" VARCHAR(255)," +
@@ -98,22 +92,40 @@ public class DatabaseManager {
 
             String sql_bike = "CREATE TABLE "+BaseColumns.TAB_PRENOTAZIONI+
                     " ("+ BaseColumns.PROGRESSIVO_PRENOTAZIONE+" VARCHAR(255) PRIMARY KEY ," +
-                    BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+" VARCHAR(255) ," +
-                    BaseColumns.IDENTIFICATIVO_TAXI+" INTEGER," +
+                    BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " VARCHAR(255) NULL ," +
+                    BaseColumns.IDENTIFICATIVO_TAXI + " INTEGER NULL," +
                     BaseColumns.IDENTIFICATIVO_CLIENTE+" VARCHAR(255) ," +
                     BaseColumns.POSIZIONE_CLIENTE+" VARCHAR(255)," +
                     BaseColumns.DESTINAZIONE+" VARCHAR(255)," +
                     BaseColumns.SERVIZI_SPECIALI+" VARCHAR(255)," +
                     BaseColumns.PRENOTAZIONE_ASSEGNATA+" VARCHAR(6),"+
-                    BaseColumns.DATA_PRENOTAZIONE+" TIMESTAMP ,"+
-                    "FOREIGN KEY ("+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+") REFERENCES "+BaseColumns.TAB_OPERATORI_TELEFONICI
-                    + "("+BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO+"),"+
-                    "FOREIGN KEY ("+BaseColumns.IDENTIFICATIVO_TAXI+") REFERENCES "+BaseColumns.TAB_TAXI
-                    + "("+BaseColumns.IDENTIFICATIVO_TAXI+"),"+
-                    "FOREIGN KEY ("+BaseColumns.IDENTIFICATIVO_CLIENTE+") REFERENCES "+BaseColumns.TAB_CLIENTE
-                    + "("+BaseColumns.IDENTIFICATIVO_CLIENTE+") )";
+                    BaseColumns.DATA_PRENOTAZIONE + " TIMESTAMP )";
             stmt.executeUpdate(sql_bike);
-        } catch ( Exception e ) {
+
+            String sql_car = "CREATE TABLE " + BaseColumns.TAB_TAXI +
+                    " (" + BaseColumns.IDENTIFICATIVO_TAXI + " INTEGER PRIMARY KEY ," +
+                    BaseColumns.STATO_TAXI + " VARCHAR(255)," +
+                    BaseColumns.DESTINAZIONE + " VARCHAR(255)," +
+                    BaseColumns.POSIZIONE_CORRENTE + " VARCHAR(255)," +
+                    BaseColumns.SERVIZI_SPECIALI + " VARCHAR(1000)," +
+                    BaseColumns.PROGRESSIVO_PRENOTAZIONE + " VARCHAR(255) NULL )";
+            stmt.executeUpdate(sql_car);
+
+            String sql_alter_prenotazioni = "ALTER TABLE " + BaseColumns.TAB_PRENOTAZIONI + " ADD FOREIGN KEY(" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + ")" +
+                    " REFERENCES " + BaseColumns.TAB_OPERATORI_TELEFONICI +
+                    "(" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + ") ON DELETE SET NULL;";
+            stmt.executeUpdate(sql_alter_prenotazioni);
+            String sql_alter_prenotazioni_taxi = "ALTER TABLE " + BaseColumns.TAB_PRENOTAZIONI + " ADD FOREIGN KEY(" + BaseColumns.IDENTIFICATIVO_TAXI + ") REFERENCES " + BaseColumns.TAB_TAXI
+                    + "(" + BaseColumns.IDENTIFICATIVO_TAXI + ") ON DELETE SET NULL;";
+            stmt.executeUpdate(sql_alter_prenotazioni_taxi);
+            String sql_alter_prenotazioni_cliente = "ALTER TABLE " + BaseColumns.TAB_PRENOTAZIONI + " ADD FOREIGN KEY(" + BaseColumns.IDENTIFICATIVO_CLIENTE + ") REFERENCES " + BaseColumns.TAB_CLIENTE
+                    + "(" + BaseColumns.IDENTIFICATIVO_CLIENTE + ") ON DELETE SET NULL; ";
+            stmt.executeUpdate(sql_alter_prenotazioni_cliente);
+            String sql_alter_taxi = "ALTER TABLE " + BaseColumns.TAB_TAXI + " ADD FOREIGN KEY(" + BaseColumns.PROGRESSIVO_PRENOTAZIONE + ")" +
+                    " REFERENCES " + BaseColumns.TAB_PRENOTAZIONI
+                    + "(" + BaseColumns.PROGRESSIVO_PRENOTAZIONE + ") ON DELETE SET NULL;";
+            stmt.executeUpdate(sql_alter_taxi);
+        } catch (Exception e) {
             throw new ConnectionSQLFailException(e.getMessage());
         }
     }
