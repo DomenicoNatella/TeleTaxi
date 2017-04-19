@@ -105,7 +105,7 @@ public class GestoreFlottaTaxi {
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE " + BaseColumns.TAB_TAXI + " SET '" + BaseColumns.STATO_TAXI + "' = ?, '" + BaseColumns.DESTINAZIONE + "' = ?, '"
                             + BaseColumns.POSIZIONE_CORRENTE + "' = ?, '"
-                            + BaseColumns.SERVIZI_SPECIALI + "' = ?, '" + BaseColumns.PROGRESSIVO_PRENOTAZIONE + "' = ?," + " WHERE '" + BaseColumns.IDENTIFICATIVO_TAXI + "' = ?");
+                            + BaseColumns.SERVIZI_SPECIALI + "' = ?, '" + BaseColumns.PROGRESSIVO_PRENOTAZIONE + "' = ? " + " WHERE '" + BaseColumns.IDENTIFICATIVO_TAXI + "' = ?");
             ps.setString(1, tx.getStato());
             ps.setString(2, tx.getDestinazione());
             ps.setString(3, tx.getPosizioneCorrente());

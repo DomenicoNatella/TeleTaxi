@@ -125,13 +125,13 @@ public class GestorePersonale {
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE " + BaseColumns.TAB_OPERATORI_TELEFONICI + " SET "+ BaseColumns.NOME_PERSONA + " = ?," +
                             BaseColumns.COGNOME_PERSONA + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
-                            + BaseColumns.PASSWORD + " = ?," + "WHERE" + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
+                            + BaseColumns.PASSWORD + " = ? " + " WHERE " + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ?");
             ps.setString(1, op.getNome());
             ps.setString(2, op.getCognome());
             ps.setTimestamp(3, new java.sql.Timestamp(op.getDataDiNascita().getTime()));
             ps.setString(4, op.getPassword());
             ps.setString(5, op.getIdentificativo());
-            ps.execute();
+            ps.executeUpdate();
             for(OperatoreTelefonico operatoreTelefonico: operatoriTelefonici)
                 if(op.getIdentificativo().equalsIgnoreCase(operatoreTelefonico.getIdentificativo()))
                     operatoriTelefonici.set(operatoriTelefonici.indexOf(operatoreTelefonico), op);
@@ -146,7 +146,7 @@ public class GestorePersonale {
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE " + BaseColumns.TAB_MANAGER + " SET "+ BaseColumns.NOME_PERSONA + " = ?," + BaseColumns.COGNOME_PERSONA
                             + " = ?," + BaseColumns.DATA_DI_NASCITA_PERSONA + " = ?,"
-                            + BaseColumns.PASSWORD + " = ?," + " WHERE " + BaseColumns.USERNAME_MANAGER + " = ?");
+                            + BaseColumns.PASSWORD + " = ? " + " WHERE " + BaseColumns.USERNAME_MANAGER + " = ?");
             ps.setString(1, manager.getNome());
             ps.setString(2, manager.getCognome());
             ps.setTimestamp(3, new java.sql.Timestamp(manager.getDataDiNascita().getTime()));
