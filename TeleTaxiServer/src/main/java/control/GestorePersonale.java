@@ -4,7 +4,7 @@ control;
 import model.Manager;
 import model.OperatoreTelefonico;
 import org.restlet.engine.util.Base64;
-import resources.*;
+import resources.BaseColumns;
 import resources.exception.*;
 import websource.DatabaseManager;
 
@@ -131,6 +131,7 @@ public class GestorePersonale {
             ps.setTimestamp(3, new java.sql.Timestamp(op.getDataDiNascita().getTime()));
             ps.setString(4, op.getPassword());
             ps.setString(5, op.getIdentificativo());
+            ps.execute();
             for(OperatoreTelefonico operatoreTelefonico: operatoriTelefonici)
                 if(op.getIdentificativo().equalsIgnoreCase(operatoreTelefonico.getIdentificativo()))
                     operatoriTelefonici.set(operatoriTelefonici.indexOf(operatoreTelefonico), op);

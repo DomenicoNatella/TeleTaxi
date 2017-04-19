@@ -2,16 +2,18 @@ package control;
 
 import com.google.gson.Gson;
 import model.*;
-import resources.*;
+import resources.BaseColumns;
 import resources.exception.*;
 import websource.DatabaseManager;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by dn on 28/03/17.
@@ -20,14 +22,11 @@ public class GestoreStatistica {
 
     private static GestoreStatistica instance = null;
     private Connection connection;
-    private Statement statement;
-    private CopyOnWriteArrayList<Statistica> statistiche;
     private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
     private Gson gs = new Gson();
 
 
     public GestoreStatistica() throws ConnectionSQLFailException {
-        statistiche = new CopyOnWriteArrayList<Statistica>();
         DatabaseManager db = DatabaseManager.getInstance();
         connection = db.getConnection();
     }
@@ -59,22 +58,63 @@ public class GestoreStatistica {
         }
     }
 
-    public synchronized Statistica findTaxiBetterWaiting(Prenotazione prenotazione) throws ConnectionSQLFailException, GetTaxiFailException, FindPrenotazioneFailException {
+    public synchronized Statistica findPrenotazioneByProgressivo(String progressivo)
+            throws FindPrenotazioneFailException, FindTaxiFailException, FindOperatoreFailException, ConnectionSQLFailException, GetTaxiFailException, FindClienteFailException {
+        List<Prenotazione> toReturn = new ArrayList<Prenotazione>();
+        PreparedStatement statement;
+        try {
+            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_PRENOTAZIONI + " WHERE "
+                    + BaseColumns.PROGRESSIVO_PRENOTAZIONE + " = '" + progressivo + "'");
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                OperatoreTelefonico op = (OperatoreTelefonico) findOperatoreById(rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO)).getValues().get(0);
+                Taxi taxi = (Taxi) findTaxiByCodice(rs.getInt(BaseColumns.IDENTIFICATIVO_TAXI)).getValues().get(0);
+                Cliente cliente = (Cliente) findClienteByID(rs.getString(BaseColumns.IDENTIFICATIVO_CLIENTE)).getValues().get(0);
+                String posizioneCliente = rs.getString(BaseColumns.POSIZIONE_CLIENTE);
+                String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
+                String[] serviziSpeciali = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
+                boolean assegnata = rs.getBoolean(BaseColumns.PRENOTAZIONE_ASSEGNATA);
+                Date dataPrenotazione = new Date(rs.getTimestamp(BaseColumns.DATA_PRENOTAZIONE).getTime());
+                if (taxi.getPrenotazione().getProgressivo().equalsIgnoreCase(progressivo) && taxi.getDestinazione().equalsIgnoreCase(posizioneCliente)) {
+                    double attesa = GestorePrenotazione.getInstance().richiediTempiDiAttesa(taxi.getPosizioneCorrente(), posizioneCliente);
+                    toReturn.add(new Prenotazione(progressivo, cliente, op, taxi, destinazione, serviziSpeciali, posizioneCliente, attesa, dataPrenotazione, assegnata));
+                } else
+                    toReturn.add(new Prenotazione(progressivo, cliente, op, taxi, destinazione, serviziSpeciali, posizioneCliente, -1.0, dataPrenotazione, assegnata));
+            }
+            return new Statistica(Prenotazione.class, toReturn);
+        } catch (SQLException e) {
+            throw new FindPrenotazioneFailException(Integer.toString(e.getErrorCode()));
+        }
+
+    }
+
+    public synchronized Statistica findTaxiBetterWaiting(Prenotazione prenotazione) throws ConnectionSQLFailException, GetTaxiFailException, FindPrenotazioneFailException, FindTaxiFailException, FindOperatoreFailException, FindClienteFailException {
         Taxi[] taxis = GestoreFlottaTaxi.getInstance().getAllTaxi();
-        Taxi min = taxis[0];
+        List<Taxi> toReturn = new ArrayList<Taxi>();
+        Taxi min = null;
+
         for(Taxi t: taxis){
-            if(GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
+            if (min == null && t.getStato().equalsIgnoreCase("libero")) min = t;
+            else if (GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
                     GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), min.getPosizioneCorrente())
                     && t != prenotazione.getTaxi() && t.getStato().equalsIgnoreCase("libero"))
                 min = t;
         }
-        List<Taxi> toReturn = new ArrayList<Taxi>();
+        if (min == null) {
+            for (Taxi t : taxis) {
+                if (min == null && t.getStato().equalsIgnoreCase("occupato")) min = t;
+                else if (GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
+                        GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), min.getPosizioneCorrente())
+                        && t != prenotazione.getTaxi() && t.getStato().equalsIgnoreCase("occupato"))
+                    min = t;
+            }
+        }
         toReturn.add(min);
         return new Statistica(Taxi.class, toReturn);
     }
 
     public synchronized Statistica findPrenotazioneByOperatoreEData(String identificatoreOperatore, Date data)
-            throws FindPrenotazioneFailException, FindTaxiFailException, FindClienteFailException, FindOperatoreFailException {
+            throws FindPrenotazioneFailException, FindTaxiFailException, FindClienteFailException, FindOperatoreFailException, GetTaxiFailException, ConnectionSQLFailException {
         PreparedStatement statement;
         ArrayList<Prenotazione> prenotazioni = new ArrayList<Prenotazione>();
         try{
@@ -120,7 +160,7 @@ public class GestoreStatistica {
     }
 
 
-    public Statistica findTaxiByCodice(int codiceTaxi) throws FindTaxiFailException {
+    public Statistica findTaxiByCodice(int codiceTaxi) throws FindTaxiFailException, GetTaxiFailException, FindClienteFailException, FindOperatoreFailException, FindPrenotazioneFailException, ConnectionSQLFailException {
         ArrayList<Taxi> taxiTmp = new ArrayList<Taxi>();
         PreparedStatement statement;
         try{
@@ -132,7 +172,8 @@ public class GestoreStatistica {
                 String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
                 String[] serviziSpeciali = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
                 String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CORRENTE);
-                taxiTmp.add(new Taxi(codiceTaxi, stato, posizioneCorrente,destinazione, serviziSpeciali));
+                Prenotazione prenotazione = (Prenotazione) findPrenotazioneByProgressivo(rs.getString(BaseColumns.PROGRESSIVO_PRENOTAZIONE)).getValues().get(0);
+                taxiTmp.add(new Taxi(codiceTaxi, stato, posizioneCorrente, destinazione, serviziSpeciali, prenotazione));
             }
             return new Statistica(Taxi.class, taxiTmp);
         }catch (SQLException e){
