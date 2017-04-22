@@ -14,11 +14,21 @@ public class Statistica {
         this.values = values;
     }
 
-    public Class getKey() {return key;}
+    public Class getKey() {
+        return key;
+    }
 
-    public Statistica setKey(Class key) {this.key = key; return this;}
+    public Statistica setKey(Class key) {
+        this.key = key;
+        return this;
+    }
 
-    public List<?> getValues() {return values;}
+    public List<?> getValues() {
+        return values;
+    }
 
-    public Statistica setValues(List<Object> values) {this.values = values; return this;}
+    public Statistica setValues(List<Object> values) {
+        this.values = values;
+        return this;
+    }
 }
