@@ -34,29 +34,6 @@ public class GestoreStatistica {
         return instance;
     }
 
-
-    public synchronized Statistica findOperatoreById(String identificatoreOperatore) throws FindOperatoreFailException {
-        List<OperatoreTelefonico> operatoriTmp = new ArrayList<OperatoreTelefonico>();
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_OPERATORI_TELEFONICI + " WHERE "
-                    + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = '" + identificatoreOperatore + "'");
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                String nome = rs.getString(BaseColumns.NOME_PERSONA);
-                String cognome = rs.getString(BaseColumns.COGNOME_PERSONA);
-                Date dataDiNascita = rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA);
-                String password = rs.getString(BaseColumns.PASSWORD);
-                operatoriTmp.add(new OperatoreTelefonico(identificatoreOperatore, nome, cognome, dataDiNascita, password));
-            }
-            return new Statistica(OperatoreTelefonico.class, operatoriTmp);
-        } catch (SQLException e) {
-            throw new FindOperatoreFailException(Integer.toString(e.getErrorCode()));
-        } catch (Exception e) {
-            throw new FindOperatoreFailException(e.getMessage());
-        }
-    }
-
     public synchronized Statistica findPrenotazioneByProgressivo(String progressivo)
             throws FindPrenotazioneFailException, FindTaxiFailException, FindOperatoreFailException, ConnectionSQLFailException, GetTaxiFailException, FindClienteFailException {
         List<Prenotazione> toReturn = new ArrayList<Prenotazione>();
@@ -66,7 +43,7 @@ public class GestoreStatistica {
                     + BaseColumns.PROGRESSIVO_PRENOTAZIONE + " = '" + progressivo + "'");
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                OperatoreTelefonico op = (OperatoreTelefonico) findOperatoreById(rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO)).getValues().get(0);
+                OperatoreTelefonico op = GestorePersonale.getInstance().findOperatore(rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO));
                 Taxi taxi = (Taxi) findTaxiByCodice(rs.getInt(BaseColumns.IDENTIFICATIVO_TAXI)).getValues().get(0);
                 Cliente cliente = (Cliente) findClienteByID(rs.getString(BaseColumns.IDENTIFICATIVO_CLIENTE)).getValues().get(0);
                 String posizioneCliente = rs.getString(BaseColumns.POSIZIONE_CLIENTE);
@@ -182,7 +159,7 @@ public class GestoreStatistica {
                 String serviziSpeciali[] = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
                 boolean assegnata = Boolean.getBoolean(rs.getString(BaseColumns.PRENOTAZIONE_ASSEGNATA));
                 prenotazioni.add(new Prenotazione(progressivo, (Cliente) findClienteByID(codiceCliente).getValues().get(0),
-                        (OperatoreTelefonico) findOperatoreById(identificatoreOperatore).getValues().get(0),
+                        GestorePersonale.getInstance().findOperatore(identificatoreOperatore),
                         (Taxi) findTaxiByCodice(codiceTaxi).getValues().get(0), destinazione, serviziSpeciali, posizioneCorrente, 0.0, data, assegnata));
             }
             return new Statistica(Prenotazione.class, prenotazioni);

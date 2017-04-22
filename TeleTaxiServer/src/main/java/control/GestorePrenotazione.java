@@ -66,10 +66,7 @@ public class GestorePrenotazione {
             while(rs.next()){
                 String progressivoPrenotazione = rs.getString(BaseColumns.PROGRESSIVO_PRENOTAZIONE);
                 String identificativoOperatore = rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO);
-                List<OperatoreTelefonico> operatoriTelefonici = (List<OperatoreTelefonico>) GestoreStatistica.getInstance().findOperatoreById(identificativoOperatore).getValues();
-                OperatoreTelefonico operatoreTelefonico;
-                if (operatoriTelefonici.size() > 0) operatoreTelefonico = operatoriTelefonici.get(0);
-                else operatoreTelefonico = null;
+                OperatoreTelefonico operatoreTelefonico = GestorePersonale.getInstance().findOperatore(identificativoOperatore);
                 int identificativoTaxi = rs.getInt(BaseColumns.IDENTIFICATIVO_TAXI);
                 Taxi taxi = (Taxi) GestoreStatistica.getInstance().findTaxiByCodice(identificativoTaxi).getValues().get(0);
                 String identificativoCliente = rs.getString(BaseColumns.IDENTIFICATIVO_CLIENTE);
@@ -159,12 +156,12 @@ public class GestorePrenotazione {
         }
     }
 
-    public synchronized void eliminaPrenotazione(Prenotazione pr) throws EliminaPrenotazioneFailException {
+    public synchronized Prenotazione eliminaPrenotazione(Prenotazione pr) throws EliminaPrenotazioneFailException {
         try {
             String sql = "DELETE FROM "+BaseColumns.TAB_PRENOTAZIONI+" WHERE "+BaseColumns.PROGRESSIVO_PRENOTAZIONE+" = '"+pr.getProgressivo()+"' ;";
             statement = connection.createStatement();
             statement.execute(sql);
-            statement.close();
+            return pr;
         } catch (SQLException e) {
             throw new EliminaPrenotazioneFailException(Integer.toString(e.getErrorCode()));
         } catch (Exception e) {

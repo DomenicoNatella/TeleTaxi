@@ -85,12 +85,12 @@ public class GestoreFlottaTaxi {
         }
     }
 
-    public synchronized void eliminaTaxi(Taxi tx) throws EliminaTaxiFailException {
+    public synchronized Taxi eliminaTaxi(Taxi tx) throws EliminaTaxiFailException {
         try {
             String sql = "DELETE FROM "+BaseColumns.TAB_TAXI+" WHERE "+BaseColumns.IDENTIFICATIVO_TAXI+" = "+tx.getCodice()+" ;";
             statement = connection.createStatement();
             statement.execute(sql);
-            statement.close();
+            return tx;
         } catch (SQLException e) {
             throw new EliminaTaxiFailException(tx.toString());
         } catch (Exception e) {
