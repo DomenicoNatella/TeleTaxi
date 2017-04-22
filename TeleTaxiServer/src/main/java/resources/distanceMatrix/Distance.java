@@ -16,13 +16,11 @@ public class Distance {
 
     /**
      * No args constructor for use in serialization
-     * 
      */
     public Distance() {
     }
 
     /**
-     * 
      * @param text
      * @param value
      */
