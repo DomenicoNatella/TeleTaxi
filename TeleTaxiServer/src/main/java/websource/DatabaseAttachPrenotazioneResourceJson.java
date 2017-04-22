@@ -1,10 +1,9 @@
 package websource;
 
 import com.google.gson.Gson;
-import control.GestorePersonale;
+import com.google.gson.GsonBuilder;
 import control.GestorePrenotazione;
 import control.GestoreStatistica;
-import model.OperatoreTelefonico;
 import model.Prenotazione;
 import org.restlet.data.Status;
 import org.restlet.resource.Get;
@@ -26,14 +25,15 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
     public String getPrenotazioni(){
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss");
+            Gson gson = gsonBuilder.create();
             String idOperatore = getQueryValue("operatore");
             if (idOperatore != null) {
                 String dataTmp = getQueryValue("data");
                 if (dataTmp != null) {
-                    Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dataTmp);
-                    OperatoreTelefonico operatoreTelefonico = GestorePersonale.getInstance().findOperatore(idOperatore);
-                    List<Prenotazione> prenotazioneByOperatoreEData = (List<Prenotazione>) GestoreStatistica.getInstance().findPrenotazioneByOperatoreEData(idOperatore, date);
+                    String hour = getQueryValue("hour");
+                    Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(dataTmp + " " + hour);
+                    List<Prenotazione> prenotazioneByOperatoreEData = (List<Prenotazione>) GestoreStatistica.getInstance().findPrenotazioneByOperatoreEData(idOperatore, date).getValues();
                     return gson.toJson(prenotazioneByOperatoreEData.toArray(new Prenotazione[prenotazioneByOperatoreEData.size()]), Prenotazione[].class);
                 } else return gson.toJson(GestorePrenotazione.getInstance().getAllPrenotazioni(), Prenotazione[].class);
             } else return gson.toJson(GestorePrenotazione.getInstance().getAllPrenotazioni(), Prenotazione[].class);
@@ -81,7 +81,6 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
             setStatus(toReturn);
             return new Gson().toJson(toReturn, Status.class);
         }catch (Exception e){
-            e.printStackTrace();
             toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
             return new Gson().toJson(toReturn, Status.class);
@@ -106,7 +105,6 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
             setStatus(toReturn);
             return new Gson().toJson(toReturn, Status.class);
         } catch (Exception e) {
-            e.printStackTrace();
             toReturn = new Status(Status.CLIENT_ERROR_BAD_REQUEST, "FatalError", e.getMessage());
             setStatus(toReturn);
             return new Gson().toJson(toReturn, Status.class);

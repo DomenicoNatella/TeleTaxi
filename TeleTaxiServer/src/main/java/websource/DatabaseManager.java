@@ -45,6 +45,7 @@ public class DatabaseManager {
             connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + BaseColumns.DB_NAME + strConnect, username, password);
             stmt = connect.createStatement();
             createTable();
+
         } catch (ClassNotFoundException e) {
         } catch (SQLException e) {
             if (e.getErrorCode() == 1007) {

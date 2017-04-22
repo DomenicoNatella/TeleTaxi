@@ -13,10 +13,14 @@ public class TeleTaxiServerWeb extends Application {
     @Override
     public Restlet createInboundRoot(){
         Router router = new Router(getContext());
-        router.attach("/teleTaxi/operatoretelefonico",DatabaseAttachOperatoreTelefonicoResourceJson.class);
-        router.attach("/teleTaxi/prenotazione", DatabaseAttachPrenotazioneResourceJson.class);
-        router.attach("/teleTaxi/taxi", DatabaseAttachTaxiResourceJson.class);
-        router.attach("/teleTaxi/cliente", DatabaseAttachClienteResourceJson.class);
+        router.attach("/teletaxi/operatoretelefonico", DatabaseAttachOperatoreTelefonicoResourceJson.class);
+        router.attach("/teletaxi/prenotazione", DatabaseAttachPrenotazioneResourceJson.class);
+        router.attach("/teletaxi/taxi", DatabaseAttachTaxiResourceJson.class);
+        router.attach("/teletaxi/cliente", DatabaseAttachClienteResourceJson.class);
+        router.attach("/teletaxi/taxi/{id}", DatabaseAttachTaxiIdResourceJson.class);
+        router.attach("/teletaxi/prenotazione/{id}", DatabaseAttachPrenotazioneIdResourceJson.class);
+        router.attach("/teletaxi/operatoretelefonico/{id}", DatabaseAttachOperatoreTelefonicoIdResourceJson.class);
+
         router.attachDefault(DatabaseAttachDefaultResource.class);
         return router;
     }
