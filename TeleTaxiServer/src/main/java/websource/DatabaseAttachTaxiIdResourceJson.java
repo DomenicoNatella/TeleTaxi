@@ -61,6 +61,10 @@ public class DatabaseAttachTaxiIdResourceJson extends ServerResource {
             toReturn = new Status(Status.CLIENT_ERROR_UNAUTHORIZED, "FatalError", "Errore di autenticazione");
             setStatus(toReturn);
             return new Gson().toJson(toReturn, Status.class);
+        } catch (Exception e) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_TAXI_FAIL, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 }

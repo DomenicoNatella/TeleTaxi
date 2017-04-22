@@ -42,6 +42,10 @@ public class DatabaseAttachPrenotazioneIdResourceJson extends ServerResource {
             toReturn = new Status(ErrorCodes.ECCEZIONE_CLIENTE_FAIL, "FatalError", e.getMessage());
             setStatus(toReturn);
             return new Gson().toJson(toReturn, Status.class);
+        } catch (Exception e) {
+            toReturn = new Status(ErrorCodes.ECCEZIONE_PRENOTAZIONE_FAIL, "FatalError", e.getMessage());
+            setStatus(toReturn);
+            return new Gson().toJson(toReturn, Status.class);
         }
     }
 }

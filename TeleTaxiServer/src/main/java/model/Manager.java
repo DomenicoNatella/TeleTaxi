@@ -54,6 +54,7 @@ public class Manager extends Persona {
                 }
             } catch (NullPointerException e) {
                 System.err.println("Nessuna connessione");
+                throw new ConnectionSQLFailException(e.getMessage());
             } catch (Exception e) {
                 throw new InserisciManagerFailException(e.getMessage());
             }
