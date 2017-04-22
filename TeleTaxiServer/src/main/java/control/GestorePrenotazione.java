@@ -44,6 +44,9 @@ public class GestorePrenotazione {
             throw new ConnectionSQLFailException(Integer.toString(e.getErrorCode()));
         }catch (NullPointerException e){
             System.err.println("Nessuna connessione");
+            throw new ConnectionSQLFailException(e.getMessage());
+        } catch (Exception e) {
+            throw new ConnectionSQLFailException(e.getMessage());
         }
     }
 
@@ -53,7 +56,7 @@ public class GestorePrenotazione {
         return instance;
     }
 
-    public Prenotazione[] getAllPrenotazioni()
+    public synchronized Prenotazione[] getAllPrenotazioni()
             throws GetPrenotazioniFailException, FindOperatoreFailException, FindTaxiFailException, FindClienteFailException, ConnectionSQLFailException, GetTaxiFailException, FindPrenotazioneFailException {
         ArrayList<Prenotazione> prenotazionesTmp = new ArrayList<Prenotazione>();
         PreparedStatement statement;
@@ -85,7 +88,6 @@ public class GestorePrenotazione {
         }catch(NullPointerException e){
             throw new GetPrenotazioniFailException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new GetPrenotazioniFailException(e.getMessage());
         }
     }
@@ -112,9 +114,9 @@ public class GestorePrenotazione {
                 statement.setString(6, pr.getDestinazione());
                 statement.setString(7, gs.toJson(pr.getServiziSpeciali()));
                 statement.setTimestamp(8, new Timestamp(pr.getData().getTime()));
-                statement.setBoolean(9, pr.isAssegnata());
+                statement.setString(9, Boolean.toString(pr.isAssegnata()));
                 statement.executeUpdate();
-                taxi.setPrenotazione(pr);
+                taxi.setPrenotazione(pr.getProgressivo());
                 GestoreFlottaTaxi.getInstance().updateTaxi(taxi);
                 pr.setTempoAttesa(richiediTempiDiAttesa(pr.getPosizioneCliente(), taxi.getPosizioneCorrente()));
                 Thread t = new Thread() {
@@ -131,7 +133,7 @@ public class GestorePrenotazione {
                                     if (taxisAssigned.size() != 0) {
                                         Taxi assignedTaxi = taxisAssigned.get(0);
                                         pr.setTaxi(assignedTaxi);
-                                        assignedTaxi.setPrenotazione(pr);
+                                        assignedTaxi.setPrenotazione(pr.getProgressivo());
                                         GestoreFlottaTaxi.getInstance().updateTaxi(assignedTaxi);
                                         prenotazione = updatePrenotazione(pr);
                                         sleep(40000);
@@ -165,6 +167,8 @@ public class GestorePrenotazione {
             statement.close();
         } catch (SQLException e) {
             throw new EliminaPrenotazioneFailException(Integer.toString(e.getErrorCode()));
+        } catch (Exception e) {
+            throw new EliminaPrenotazioneFailException(e.getMessage());
         }
     }
 
@@ -193,10 +197,12 @@ public class GestorePrenotazione {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new UpdatePrenotazioneFailException(Integer.toString(e.getErrorCode()));
+        } catch (Exception e) {
+            throw new UpdatePrenotazioneFailException(e.getMessage());
         }
     }
 
-    public double richiediTempiDiAttesa(String indirizzoOrigine, String indirizzoDestinazione)
+    public synchronized double richiediTempiDiAttesa(String indirizzoOrigine, String indirizzoDestinazione)
             throws ConnectionSQLFailException, GetTaxiFailException, FindPrenotazioneFailException {
         try {
             Gson gs = new Gson();
@@ -218,6 +224,8 @@ public class GestorePrenotazione {
                 for (Element e : r.getElements()) parts = e.getDuration().getText().split(" ");
             return Double.parseDouble(parts[0]);
         }catch (IOException e){
+            throw new FindPrenotazioneFailException(e.getMessage());
+        } catch (Exception e) {
             throw new FindPrenotazioneFailException(e.getMessage());
         }
     }
