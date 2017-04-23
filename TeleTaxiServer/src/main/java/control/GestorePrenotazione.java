@@ -68,7 +68,9 @@ public class GestorePrenotazione {
                 String identificativoOperatore = rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO);
                 OperatoreTelefonico operatoreTelefonico = GestorePersonale.getInstance().findOperatore(identificativoOperatore);
                 int identificativoTaxi = rs.getInt(BaseColumns.IDENTIFICATIVO_TAXI);
-                Taxi taxi = (Taxi) GestoreStatistica.getInstance().findTaxiByCodice(identificativoTaxi).getValues().get(0);
+                Taxi taxi = null;
+                if (identificativoTaxi != 0)
+                    taxi = (Taxi) GestoreStatistica.getInstance().findTaxiByCodice(identificativoTaxi).getValues().get(0);
                 String identificativoCliente = rs.getString(BaseColumns.IDENTIFICATIVO_CLIENTE);
                 Cliente cliente =(Cliente) GestoreStatistica.getInstance().findClienteByID(identificativoCliente).getValues().get(0);
                 String posizioneCorrente = rs.getString(BaseColumns.POSIZIONE_CLIENTE);
@@ -181,20 +183,22 @@ public class GestorePrenotazione {
                             +" WHERE " + BaseColumns.PROGRESSIVO_PRENOTAZIONE + " = ?");
             if (p.getOperatoreTelefonico() != null) ps.setString(1, p.getOperatoreTelefonico().getIdentificativo());
             else ps.setString(1, null);
-            ps.setInt(2, p.getTaxi().getCodice());
+            if (p.getTaxi() != null) {
+                ps.setInt(2, p.getTaxi().getCodice());
+                p.setTempoAttesa(richiediTempiDiAttesa(p.getPosizioneCliente(), p.getTaxi().getPosizioneCorrente()));
+            } else ps.setString(2, null);
             ps.setString(3, p.getCliente().getCodiceCliente());
             ps.setString(4, p.getPosizioneCliente());
             ps.setString(5, p.getDestinazione());
             ps.setString(6, gson.toJson(p.getServiziSpeciali(), String[].class));
             ps.setString(7, Boolean.toString(p.isAssegnata()));
             ps.setString(8, p.getProgressivo());
-            p.setTempoAttesa(richiediTempiDiAttesa(p.getPosizioneCliente(), p.getTaxi().getPosizioneCorrente()));
             ps.executeUpdate();
             return p;
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new UpdatePrenotazioneFailException(Integer.toString(e.getErrorCode()));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new UpdatePrenotazioneFailException(e.getMessage());
         }
     }
