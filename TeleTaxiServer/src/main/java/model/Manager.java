@@ -25,14 +25,16 @@ import java.util.Scanner;
 public class Manager extends Persona {
     private String username, password;
     private static Manager instance;
-    private Connection connection;
+    private static Connection connection;
+
+    public Manager() {
+    }
 
     public Manager(String nome, String cognome, Date dataDiNascita, String username, String password) throws ConnectionSQLFailException, InserisciManagerFailException {
         super(nome, cognome, dataDiNascita);
         this.username = username;
         this.password = Base64.encode(password.getBytes(), true);
         DatabaseManager db = DatabaseManager.getInstance();
-        synchronized (this) {
             try {
                 connection = db.getConnection();
                 SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
@@ -53,16 +55,12 @@ public class Manager extends Persona {
                     throw new InserisciManagerFailException(e.getMessage());
                 }
             } catch (NullPointerException e) {
-                System.err.println("Nessuna connessione");
                 throw new ConnectionSQLFailException(e.getMessage());
             } catch (Exception e) {
                 throw new InserisciManagerFailException(e.getMessage());
             }
-        }
     }
 
-    public Manager() {
-    }
 
     public String getUsername() {
         return username;
@@ -99,7 +97,10 @@ public class Manager extends Persona {
                     return instance;
                 } else if (initialKey.equalsIgnoreCase("false")) {
                     Manager toReturn = GestorePersonale.getInstance().findManager(s.nextLine());
-                    if (toReturn != null) return instance = toReturn;
+                    if (toReturn != null) {
+                        connection = DatabaseManager.getInstance().getConnection();
+                        return instance = toReturn;
+                    }
                     else {
                         return instance = new Manager("Amministratore", "", new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2017"), "admin", "admin");
                     }
@@ -146,18 +147,12 @@ public class Manager extends Persona {
         }
     }
 
-    @Override
-    public String toString() {
-        return "Manager: " + "username: '" + username + '\'';
-    }
-
     public synchronized OperatoreTelefonico eliminaOperatoreTelefonico(OperatoreTelefonico op) throws EliminaOperatoreTelefonicoFailException {
         Statement statement;
         try {
-            String sql = "DELETE FROM " + BaseColumns.TAB_OPERATORI_TELEFONICI + " WHERE " + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = '" + op.getIdentificativo() + "' ;";
+            String sql = "DELETE FROM " + BaseColumns.TAB_OPERATORI_TELEFONICI + " WHERE " + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = '" + op.getIdentificativo() + "'";
             statement = connection.createStatement();
             statement.execute(sql);
-            statement.close();
             return op;
         } catch (SQLException e) {
             throw new EliminaOperatoreTelefonicoFailException(Integer.toString(e.getErrorCode()));
@@ -184,6 +179,11 @@ public class Manager extends Persona {
         } catch (Exception e) {
             throw new UpdateOperatoreTelefonicoFailException(e.getMessage());
         }
-
     }
+
+    @Override
+    public String toString() {
+        return "Manager: " + "username: '" + username + '\'';
+    }
+
 }
