@@ -1,6 +1,7 @@
 package websource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import control.GestorePersonale;
 import model.Manager;
 import model.OperatoreTelefonico;
@@ -22,7 +23,7 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
     public String getOperatori(){
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
             if(m.getPassword().equalsIgnoreCase(series.getFirstValue("Authorization")))
@@ -51,7 +52,7 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
     public String createOperatoreTelefonico(String body) {
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             if(Manager.getInstance().getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {
                 OperatoreTelefonico toAdd = gson.fromJson(body, OperatoreTelefonico.class);
@@ -81,7 +82,7 @@ public class DatabaseAttachOperatoreTelefonicoResourceJson extends ServerResourc
     public String updateOperatoreTelefonico(String body){
         Status toReturn;
         try{
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             if(Manager.getInstance().getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {
                 OperatoreTelefonico toUpdate = gson.fromJson(body, OperatoreTelefonico.class);

@@ -68,7 +68,7 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
     public String createPrenotazione(String body){
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Prenotazione toAdd = gson.fromJson(body, Prenotazione.class);
             GestorePrenotazione.getInstance().inserisciPrenotazione(toAdd);
             return gson.toJson(toAdd,Prenotazione.class);
@@ -92,7 +92,7 @@ public class DatabaseAttachPrenotazioneResourceJson extends ServerResource {
     public String updatePrenotazione(String body){
         Status toReturn;
         try{
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Prenotazione toUpdate = gson.fromJson(body, Prenotazione.class);
             GestorePrenotazione.getInstance().updatePrenotazione(toUpdate);
             return gson.toJson(toUpdate, Prenotazione.class);
