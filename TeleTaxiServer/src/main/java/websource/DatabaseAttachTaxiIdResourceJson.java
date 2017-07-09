@@ -1,6 +1,7 @@
 package websource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import control.GestoreFlottaTaxi;
 import control.GestoreStatistica;
 import model.Manager;
@@ -20,7 +21,7 @@ public class DatabaseAttachTaxiIdResourceJson extends ServerResource {
     @Get("json")
     public String getTaxiByID() {
         Status toReturn;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
         try {
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
@@ -74,7 +75,7 @@ public class DatabaseAttachTaxiIdResourceJson extends ServerResource {
     public String deleteTaxi() {
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
             if (m.getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {

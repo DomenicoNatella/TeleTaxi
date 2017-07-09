@@ -45,7 +45,7 @@ public class Cliente extends Persona {
     }
 
     public synchronized void inserisciCliente() throws InserisciClienteFailException, ConnectionSQLFailException {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         try {
             DatabaseManager db = DatabaseManager.getInstance();
             connection = db.getConnection();
@@ -56,7 +56,8 @@ public class Cliente extends Persona {
             statement.setString(1, this.getCodiceCliente());
             statement.setString(2, this.getNome());
             statement.setString(3, this.getCognome());
-            statement.setTimestamp(4, new java.sql.Timestamp(this.getDataDiNascita().getTime()));
+            df.format(this.getDataDiNascita());
+            statement.setTimestamp(4, new java.sql.Timestamp(this.getDataDiNascita().getTime()+3600000));
             statement.setInt(5, this.getTelefono());
             statement.executeUpdate();
         } catch (SQLException e) {

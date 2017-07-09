@@ -1,6 +1,7 @@
 package websource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import control.GestoreFlottaTaxi;
 import model.Manager;
 import model.Taxi;
@@ -21,9 +22,8 @@ public class DatabaseAttachTaxiResourceJson extends ServerResource {
     @Get("json")
     public String getTaxi(){
         Status toReturn;
-        Gson gson;
         try {
-            gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
             if (m.getPassword().equalsIgnoreCase(series.getFirstValue("Authorization")))
@@ -52,7 +52,7 @@ public class DatabaseAttachTaxiResourceJson extends ServerResource {
     public String createTaxi(String body){
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
             if (m.getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {
@@ -83,7 +83,7 @@ public class DatabaseAttachTaxiResourceJson extends ServerResource {
     public String updateTaxi(String body) {
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Taxi toUpdate = gson.fromJson(body, Taxi.class);
             return gson.toJson(GestoreFlottaTaxi.getInstance().updateTaxi(toUpdate), Taxi.class);
         } catch (UpdateTaxiFailException e) {

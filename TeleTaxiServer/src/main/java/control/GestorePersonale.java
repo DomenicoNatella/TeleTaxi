@@ -18,7 +18,7 @@ import java.util.Date;
 public class GestorePersonale {
 
     private static GestorePersonale instance = null;
-    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private Connection connection;
     private Statement statement;
 
@@ -77,7 +77,7 @@ public class GestorePersonale {
                 String nome = rs.getString(BaseColumns.NOME_PERSONA);
                 String cognome = rs.getString(BaseColumns.COGNOME_PERSONA);
                 Date dataDiNascita = new Date();
-                dataDiNascita.setTime(rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA).getTime());
+                dataDiNascita.setTime(rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA).getTime()+3600);
                 String password = BaseColumns.PASSWORD;
                 op = new OperatoreTelefonico(identificativoOperatore, nome, cognome, dataDiNascita, password);
             }
@@ -103,7 +103,7 @@ public class GestorePersonale {
                 manager.setNome(rs.getString(BaseColumns.NOME_PERSONA));
                 manager.setCognome(rs.getString(BaseColumns.COGNOME_PERSONA));
                 Date dataDiNascita = new Date();
-                dataDiNascita.setTime(rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA).getTime());
+                dataDiNascita.setTime(rs.getTimestamp(BaseColumns.DATA_DI_NASCITA_PERSONA).getTime()+3600);
                 manager.setDataDiNascita(dataDiNascita);
                 manager.setPassword(new String(Base64.decode(rs.getString(BaseColumns.PASSWORD))));
             }
@@ -142,7 +142,7 @@ public class GestorePersonale {
                             + BaseColumns.PASSWORD + " = ? " + " WHERE " + BaseColumns.USERNAME_MANAGER + " = ?");
             ps.setString(1, manager.getNome());
             ps.setString(2, manager.getCognome());
-            ps.setTimestamp(3, new java.sql.Timestamp(manager.getDataDiNascita().getTime()));
+            ps.setTimestamp(3, new java.sql.Timestamp(manager.getDataDiNascita().getTime()+3600000));
             ps.setString(4, manager.getPassword());
             ps.setString(5, manager.getUsername());
             return manager;

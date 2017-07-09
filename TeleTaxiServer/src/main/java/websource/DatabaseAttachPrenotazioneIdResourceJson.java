@@ -1,6 +1,7 @@
 package websource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import control.GestorePrenotazione;
 import control.GestoreStatistica;
 import model.Prenotazione;
@@ -17,7 +18,7 @@ public class DatabaseAttachPrenotazioneIdResourceJson extends ServerResource {
 
     @Get("json")
     public String getPrenotazioneByID() {
-        Gson gson;
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
         Status toReturn;
         try {
             gson = new Gson();
@@ -56,7 +57,7 @@ public class DatabaseAttachPrenotazioneIdResourceJson extends ServerResource {
     @Delete("json")
     public String deletePrenotazione() {
         Status toReturn;
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
         try {
             Prenotazione toDelete = (Prenotazione) GestoreStatistica.getInstance().findPrenotazioneByProgressivo(getAttribute("id")).getValues().get(0);
             return gson.toJson(GestorePrenotazione.getInstance().eliminaPrenotazione(toDelete), Prenotazione.class);

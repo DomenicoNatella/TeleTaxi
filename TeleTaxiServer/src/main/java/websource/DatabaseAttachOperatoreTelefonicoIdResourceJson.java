@@ -1,6 +1,7 @@
 package websource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import control.GestorePersonale;
 import model.Manager;
 import model.OperatoreTelefonico;
@@ -21,7 +22,7 @@ public class DatabaseAttachOperatoreTelefonicoIdResourceJson extends ServerResou
     public String getOperatoreTelefonicoByID() {
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             Manager m = Manager.getInstance();
             if (m.getPassword().equalsIgnoreCase(series.getFirstValue("Authorization")))
@@ -54,7 +55,7 @@ public class DatabaseAttachOperatoreTelefonicoIdResourceJson extends ServerResou
     public String deleteOperatore() {
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Series<Header> series = (Series<Header>) getRequest().getHeaders();
             if (Manager.getInstance().getPassword().equalsIgnoreCase(series.getFirstValue("Authorization"))) {
                 return gson.toJson(GestorePersonale.getInstance().eliminaOperatoreTelefonico(getAttribute("id")), OperatoreTelefonico.class);

@@ -1,6 +1,7 @@
 package websource;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import model.Cliente;
 import org.restlet.data.Status;
 import org.restlet.resource.Put;
@@ -17,7 +18,7 @@ public class DatabaseAttachClienteResourceJson extends ServerResource {
     public String inserisciCliente(String body){
         Status toReturn;
         try {
-            Gson gson = new Gson();
+            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy HH:mm:ss").create();
             Cliente toAdd = gson.fromJson(body, Cliente.class);
             toAdd.inserisciCliente();
             Cliente returned = new Cliente(toAdd.getCodiceCliente(), toAdd.getNome(), toAdd.getCognome(), toAdd.getDataDiNascita(), toAdd.getTelefono());

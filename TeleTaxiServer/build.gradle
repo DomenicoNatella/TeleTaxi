@@ -2,19 +2,82 @@ group 'TeleTaxiServer'
 version '0.1-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
 
 sourceCompatibility = 1.5
 
+task pmd(type: Pmd) {
+    ignoreFailures = true
+    ruleSetFiles = files("config/quality/pmd/pmd-ruleset.xml")
+    //ruleSets = []
+
+    //source 'src'
+    source = fileTree('src/main/java')
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/pmd/pmd.html"
+        }
+    }
+}
+
+task findbugs(type: FindBugs) {
+    description 'Run findbugs'
+    group 'verification'
+    classes = fileTree('build/classes/main/')
+    source = fileTree('src/main/java')
+    classpath = files()
+    effort = 'max'
+    reportLevel = "high"
+    ignoreFailures = true
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        html {
+            destination "$project.buildDir/reports/findbugs/findbugs-output.html"
+        }
+    }
+}
+
+task checkstyle(type: Checkstyle) {
+    ignoreFailures = true
+    configFile file("config/quality/checkstyle/checkstyle.xml")
+    //source = fileTree('src/main/java')
+    source = fileTree('src/main/java')
+    include '**/*.java'
+    exclude '**/gen/**'
+    classpath = files()
+    reports {
+        xml.enabled false
+        html.enabled = true
+    }
+}
+
 repositories {
     mavenCentral()
+    maven { url "https://mvnrepository.com/artifact/commons-codec/commons-codec" }
     maven { url "http://maven.restlet.org" }
     maven { url "https://mvnrepository.com/artifact/mysql/mysql-connector-java"}
+}
+
+jar {
+    manifest {
+        attributes "Main-Class" : "websource.TeleTaxiServerWeb"
+    }
 }
 
 ext.restletVersion = "2.3.9"
 
 
 dependencies {
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
     compile "org.restlet.jee:org.restlet:${restletVersion}"
     compile "org.restlet.jee:org.restlet.ext.jackson:${restletVersion}"
