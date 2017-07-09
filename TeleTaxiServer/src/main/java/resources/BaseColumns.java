@@ -5,7 +5,7 @@ package resources;
  */
 public class BaseColumns {
 
-    public static final String TAB_OPERATORI_TELEFONICI = "operatori_telefonici";
+    public static final String TAB_OPERATORI_TELEFONICI = "operatoritelefonici";
     public static final String IDENTIFICATIVO_OPERATORE_TELEFONICO = "identificativo_operatore_telefonico";
 
     public static final String NOME_PERSONA = "nome";
@@ -33,7 +33,7 @@ public class BaseColumns {
     public static final String TAB_MANAGER = "manager";
     public static final String USERNAME_MANAGER = "username";
 
-    public static final String DB_NAME = "TELETAXI" ;
+    public static final String DB_NAME = "TeleTaxi" ;
 
 
 }
