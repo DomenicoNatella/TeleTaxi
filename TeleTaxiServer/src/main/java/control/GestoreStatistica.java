@@ -19,7 +19,7 @@ public class GestoreStatistica {
 
     private static GestoreStatistica instance = null;
     private Connection connection;
-    private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     private Gson gs = new Gson();
 
 
@@ -122,7 +122,7 @@ public class GestoreStatistica {
 
         for (Taxi t : taxis) {
             if (min == null && t.getStato().equalsIgnoreCase("libero")) min = t;
-            else if (GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
+            else if (min != null && GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), t.getPosizioneCorrente()) <
                     GestorePrenotazione.getInstance().richiediTempiDiAttesa(prenotazione.getPosizioneCliente(), min.getPosizioneCorrente())
                     && t != prenotazione.getTaxi() && t.getStato().equalsIgnoreCase("libero"))
                 min = t;
@@ -148,7 +148,7 @@ public class GestoreStatistica {
             statement = connection.prepareStatement("SELECT * FROM " + BaseColumns.TAB_PRENOTAZIONI + " WHERE "
                     + BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO + " = ? AND " + BaseColumns.DATA_PRENOTAZIONE + " = ?");
             statement.setString(1, identificatoreOperatore);
-            statement.setTimestamp(2, new Timestamp(data.getTime()));
+            statement.setTimestamp(2, new Timestamp(data.getTime()+3600000));
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 String progressivo = rs.getString(BaseColumns.IDENTIFICATIVO_OPERATORE_TELEFONICO);

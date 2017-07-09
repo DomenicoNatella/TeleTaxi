@@ -77,7 +77,7 @@ public class GestorePrenotazione {
                 String destinazione = rs.getString(BaseColumns.DESTINAZIONE);
                 String[] serviziSpeciali = gs.fromJson(rs.getString(BaseColumns.SERVIZI_SPECIALI), String[].class);
                 java.util.Date dataPrenotazione = new java.util.Date(rs.getTimestamp(BaseColumns.DATA_PRENOTAZIONE).getTime());
-                boolean assegnata = Boolean.getBoolean(rs.getString(BaseColumns.PRENOTAZIONE_ASSEGNATA));
+                boolean assegnata = Boolean.valueOf(rs.getString(BaseColumns.PRENOTAZIONE_ASSEGNATA));
                 prenotazionesTmp.add(new Prenotazione(progressivoPrenotazione,cliente,operatoreTelefonico,taxi,destinazione,serviziSpeciali,posizioneCorrente,
                         0.0,dataPrenotazione,assegnata));
             }
@@ -93,7 +93,7 @@ public class GestorePrenotazione {
 
     public synchronized Prenotazione inserisciPrenotazione(final Prenotazione pr)
             throws InserisciPrenotazioneFailException, ConnectionSQLFailException, GetTaxiFailException, FindPrenotazioneFailException, UpdatePrenotazioneFailException {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         final PreparedStatement statement;
         try {
             statement = connection.prepareStatement("INSERT INTO " + BaseColumns.TAB_PRENOTAZIONI +
@@ -112,7 +112,7 @@ public class GestorePrenotazione {
                 statement.setString(5, pr.getPosizioneCliente());
                 statement.setString(6, pr.getDestinazione());
                 statement.setString(7, gs.toJson(pr.getServiziSpeciali()));
-                statement.setTimestamp(8, new Timestamp(pr.getData().getTime()));
+                statement.setTimestamp(8, new Timestamp(pr.getData().getTime()+3600000));
                 statement.setString(9, Boolean.toString(pr.isAssegnata()));
                 statement.executeUpdate();
                 taxi.setPrenotazione(pr.getProgressivo());
