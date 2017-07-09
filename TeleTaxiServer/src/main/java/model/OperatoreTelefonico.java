@@ -31,7 +31,8 @@ public class OperatoreTelefonico extends Persona {
     }
 
     public OperatoreTelefonico setPassword(String password) {
-        this.password = Base64.encode(password.getBytes(), true);
+        if(org.apache.commons.codec.binary.Base64.isBase64(password.getBytes()))
+            this.password = Base64.encode(password.getBytes(), true);
         return this;
     }
 
