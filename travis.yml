@@ -1,0 +1,4 @@
+language: android
+sudo: required
+jdk: oraclejdk8
+script: ant ./TeleTaxiServer/teletaxiserver
