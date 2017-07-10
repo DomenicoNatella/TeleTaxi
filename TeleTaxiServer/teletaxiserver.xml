@@ -1,0 +1,765 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="teletaxiserver" default="all">
+  
+  
+  <property file="teletaxiserver.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="lib/ant-javafx.jar"/>
+      <include name="lib/dt.jar"/>
+      <include name="lib/javafx-mx.jar"/>
+      <include name="lib/jconsole.jar"/>
+      <include name="lib/packager.jar"/>
+      <include name="lib/sa-jdi.jar"/>
+      <include name="lib/tools.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.4.4/d3dad1a494f94579fca4b6a1142fb15fb68f0b2f/jackson-annotations-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.4.4/c5cd3347c0a86d0dcfbf3da593d8431d5a789d54/jackson-core-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.4.4/e2ff13c3de2f5a2ab2449a3dace2b0d1c37bd8ee/jackson-databind-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.dataformat/jackson-dataformat-csv/2.4.4/ddbd3237398099245d46d457e2f75b9273250d13/jackson-dataformat-csv-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.dataformat/jackson-dataformat-smile/2.4.4/5e09dc6c2ed98d45e4142dcc02cccdef5e1ce1f0/jackson-dataformat-smile-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.dataformat/jackson-dataformat-xml/2.4.4/2655d1d280b4e42a550ef0b4236e8eda09c36922/jackson-dataformat-xml-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml/2.4.4/cce224c3e4efbe509f2f6139f2a997928667cceb/jackson-dataformat-yaml-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-jaxb-annotations/2.4.4/9a6e4face31ed04530e57d4bf5c7767cf944575c/jackson-module-jaxb-annotations-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-jsonSchema/2.4.4/c638a90dd7a277029506df43ea6b894fa43da4e1/jackson-module-jsonSchema-2.4.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.google.code.gson:gson:2.8.0.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.0/c4ba5371a29ac9b2ad6129b1d39ea38750043eff/gson-2.8.0.jar"/>
+  </path>
+  
+  <path id="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/com.sun.xml.bind/jaxb-impl/2.1.12/acd999a9fab1bbca3e635304edb42910601f4064/jaxb-impl-2.1.12.jar"/>
+  </path>
+  
+  <path id="library.gradle:_commons-codec:commons-codec:1.10.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar"/>
+  </path>
+  
+  <path id="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/commons-fileupload/commons-fileupload/1.3/c89e540e4a12cb034fb973e12135839b5de9a87e/commons-fileupload-1.3.jar"/>
+  </path>
+  
+  <path id="library.gradle:_commons-io:commons-io:2.2.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.2/83b5b8a7ba1c08f9e8c8ff2373724e33d3c1e22a/commons-io-2.2.jar"/>
+  </path>
+  
+  <path id="library.gradle:_commons-lang:commons-lang:2.6.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/commons-lang/commons-lang/2.6/ce1edb914c94ebc388f086c6827e8bdeec71ac2/commons-lang-2.6.jar"/>
+  </path>
+  
+  <path id="library.gradle:_javax.activation:activation:1.1.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/javax.activation/activation/1.1/e6cb541461c2834bdea3eb920f1884d1eb508b50/activation-1.1.jar"/>
+  </path>
+  
+  <path id="library.gradle:_javax.mail:mail:1.4.2.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/javax.mail/mail/1.4.2/6a1d836b6a4c77ec11ac46d2ea8557ca574cd428/mail-1.4.2.jar"/>
+  </path>
+  
+  <path id="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/3cd63d075497751784b2fa84be59432f4905bf7c/javax.servlet-api-3.1.0.jar"/>
+  </path>
+  
+  <path id="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/javax.ws.rs/javax.ws.rs-api/2.0/61f0983eb190954ccdede31e786a9e0bd9767c4a/javax.ws.rs-api-2.0.jar"/>
+  </path>
+  
+  <path id="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/javax.xml.bind/jaxb-api/2.1/d68570e722cffe2000358ce9c661a0b0bf1ebe11/jaxb-api-2.1.jar"/>
+  </path>
+  
+  <path id="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/javax.xml.stream/stax-api/1.0-2/d6337b0de8b25e53e81b922352fbea9f9f57ba0b/stax-api-1.0-2.jar"/>
+  </path>
+  
+  <path id="library.gradle:_junit:junit:4.11.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/junit/junit/4.11/4e031bb61df09069aeb2bffb4019e7a5034a4ee0/junit-4.11.jar"/>
+  </path>
+  
+  <path id="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/mysql/mysql-connector-java/6.0.6/1d19b184dbc596008cc71c83596f051c3ec4097f/mysql-connector-java-6.0.6.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.codehaus.woodstox/stax2-api/3.1.4/ac19014b1e6a7c08aad07fe114af792676b685b7/stax2-api-3.1.4.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.codehaus.woodstox/woodstox-core-asl/4.3.0/4e5b4dace086019d0ca4a9b4786ea1d8a51bb01c/woodstox-core-asl-4.3.0.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.hamcrest:hamcrest-core:1.3.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.json:json:20160212.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.json/json/20160212/a742e3f85161835b95877478c5dd5b405cefaab9/json-20160212.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.restlet.jee/org.restlet.ext.jackson/2.3.9/4e55251bcb7cd935081f2726a954887ec5c4165f/org.restlet.ext.jackson-2.3.9.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.restlet.jee/org.restlet.ext.jaxrs/2.3.9/3ec8b035861b9098c7a03861f4d901239c00bfed/org.restlet.ext.jaxrs-2.3.9.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.restlet.jee/org.restlet/2.3.9/c533067ca587c496ee3e3febd1e8577854c1e3dd/org.restlet-2.3.9.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.simpleframework/simple-xml/2.7.1/dd91fb744c2ff921407475cb29a1e3fee397d411/simple-xml-2.7.1.jar"/>
+  </path>
+  
+  <path id="library.gradle:_org.yaml:snakeyaml:1.13.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.13/73cbb494a912866c4c831a178c3a2a9169f4eaad/snakeyaml-1.13.jar"/>
+  </path>
+  
+  <path id="library.gradle:_stax:stax-api:1.0.1.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/stax/stax-api/1.0.1/49c100caf72d658aca8e58bd74a4ba90fa2b0d70/stax-api-1.0.1.jar"/>
+  </path>
+  
+  <path id="library.gradle:_stax:stax:1.2.0.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/stax/stax/1.2.0/c434800de5e4bbe1822805be5fb1c32d6834f830/stax-1.2.0.jar"/>
+  </path>
+  
+  <path id="library.gradle:_xpp3:xpp3:1.1.3.3.classpath">
+    <pathelement location="${basedir}/../../../../.gradle/caches/modules-2/files-2.1/xpp3/xpp3/1.1.3.3/64f9d2bb88f58ad2a15a4301487d977ee9b4294/xpp3-1.1.3.3.jar"/>
+  </path>
+  
+  
+  <!-- Application Server Libraries -->
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module TeleTaxiServer -->
+  
+  <dirname property="module.teletaxiserver.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.teletaxiserver" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.teletaxiserver" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.teletaxiserver" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.teletaxiserver" value="-encoding UTF-8 -source 8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="teletaxiserver.output.dir" value="${module.teletaxiserver.basedir}/classes/production/TeleTaxiServer"/>
+  <property name="teletaxiserver.testoutput.dir" value="${module.teletaxiserver.basedir}/classes/test/TeleTaxiServer"/>
+  
+  <path id="teletaxiserver.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="teletaxiserver.module.production.classpath">
+    <path refid="${module.jdk.classpath.teletaxiserver}"/>
+  </path>
+  
+  <path id="teletaxiserver.runtime.production.module.classpath">
+    <pathelement location="${teletaxiserver.output.dir}"/>
+  </path>
+  
+  <path id="teletaxiserver.module.classpath">
+    <path refid="${module.jdk.classpath.teletaxiserver}"/>
+    <pathelement location="${teletaxiserver.output.dir}"/>
+  </path>
+  
+  <path id="teletaxiserver.runtime.module.classpath">
+    <pathelement location="${teletaxiserver.testoutput.dir}"/>
+    <pathelement location="${teletaxiserver.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.teletaxiserver">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.teletaxiserver">
+    <patternset refid="excluded.from.module.teletaxiserver"/>
+  </patternset>
+  
+  
+  <target name="compile.module.teletaxiserver" depends="compile.module.teletaxiserver.production,compile.module.teletaxiserver.tests" description="Compile module TeleTaxiServer"/>
+  
+  <target name="compile.module.teletaxiserver.production" depends="register.custom.compilers" description="Compile module TeleTaxiServer; production classes"/>
+  
+  <target name="compile.module.teletaxiserver.tests" depends="register.custom.compilers,compile.module.teletaxiserver.production" description="compile module TeleTaxiServer; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.teletaxiserver" description="cleanup module">
+    <delete dir="${teletaxiserver.output.dir}"/>
+    <delete dir="${teletaxiserver.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module TeleTaxiServer_main -->
+  
+  <dirname property="module.teletaxiserver_main.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.teletaxiserver_main" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.teletaxiserver_main" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.teletaxiserver_main" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.teletaxiserver_main" value="-encoding UTF-8 -source 1.7 -target 1.8 ${compiler.args}"/>
+  
+  <property name="teletaxiserver_main.output.dir" value="${module.teletaxiserver_main.basedir}/build/classes/main"/>
+  <property name="teletaxiserver_main.testoutput.dir" value="${module.teletaxiserver_main.basedir}/build/classes/main"/>
+  
+  <path id="teletaxiserver_main.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="teletaxiserver_main.module.production.classpath">
+    <path refid="${module.jdk.classpath.teletaxiserver_main}"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  <path id="teletaxiserver_main.runtime.production.module.classpath">
+    <pathelement location="${teletaxiserver_main.output.dir}"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  <path id="teletaxiserver_main.module.classpath">
+    <path refid="${module.jdk.classpath.teletaxiserver_main}"/>
+    <pathelement location="${teletaxiserver_main.output.dir}"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  <path id="teletaxiserver_main.runtime.module.classpath">
+    <pathelement location="${teletaxiserver_main.output.dir}"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.teletaxiserver_main">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.teletaxiserver_main">
+    <patternset refid="excluded.from.module.teletaxiserver_main"/>
+  </patternset>
+  
+  <path id="teletaxiserver_main.module.sourcepath">
+    <dirset dir="${module.teletaxiserver_main.basedir}/src/main">
+      <include name="java"/>
+      <include name="resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.teletaxiserver_main" depends="compile.module.teletaxiserver_main.production,compile.module.teletaxiserver_main.tests" description="Compile module TeleTaxiServer_main"/>
+  
+  <target name="compile.module.teletaxiserver_main.production" depends="register.custom.compilers" description="Compile module TeleTaxiServer_main; production classes">
+    <mkdir dir="${teletaxiserver_main.output.dir}"/>
+    <javac2 destdir="${teletaxiserver_main.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.teletaxiserver_main}/javac">
+      <compilerarg line="${compiler.args.teletaxiserver_main}"/>
+      <bootclasspath refid="teletaxiserver_main.module.bootclasspath"/>
+      <classpath refid="teletaxiserver_main.module.production.classpath"/>
+      <src refid="teletaxiserver_main.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.teletaxiserver_main"/>
+    </javac2>
+    
+    <copy todir="${teletaxiserver_main.output.dir}">
+      <fileset dir="${module.teletaxiserver_main.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.teletaxiserver_main.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.teletaxiserver_main.tests" depends="register.custom.compilers,compile.module.teletaxiserver_main.production" description="compile module TeleTaxiServer_main; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.teletaxiserver_main" description="cleanup module">
+    <delete dir="${teletaxiserver_main.output.dir}"/>
+    <delete dir="${teletaxiserver_main.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module TeleTaxiServer_test -->
+  
+  <dirname property="module.teletaxiserver_test.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.teletaxiserver_test" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.teletaxiserver_test" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.teletaxiserver_test" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.teletaxiserver_test" value="-encoding UTF-8 -source 1.5 -target 1.8 ${compiler.args}"/>
+  
+  <property name="teletaxiserver_test.output.dir" value="undefined"/>
+  <property name="teletaxiserver_test.testoutput.dir" value="${module.teletaxiserver_test.basedir}/build/classes/test"/>
+  
+  <path id="teletaxiserver_test.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="teletaxiserver_test.module.production.classpath">
+    <path refid="${module.jdk.classpath.teletaxiserver_test}"/>
+    <pathelement location="${teletaxiserver_main.output.dir}"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_junit:junit:4.11.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  <path id="teletaxiserver_test.runtime.production.module.classpath">
+    <path refid="teletaxiserver_main.runtime.production.module.classpath"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_junit:junit:4.11.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  <path id="teletaxiserver_test.module.classpath">
+    <path refid="${module.jdk.classpath.teletaxiserver_test}"/>
+    <pathelement location="${teletaxiserver_main.output.dir}"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_junit:junit:4.11.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  <path id="teletaxiserver_test.runtime.module.classpath">
+    <pathelement location="${teletaxiserver_test.testoutput.dir}"/>
+    <path refid="teletaxiserver_main.runtime.module.classpath"/>
+    <path refid="library.gradle:_commons-codec:commons-codec:1.10.classpath"/>
+    <path refid="library.gradle:_mysql:mysql-connector-java:6.0.6.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jackson:2.3.9.classpath"/>
+    <path refid="library.gradle:_org.restlet.jee:org.restlet.ext.jaxrs:2.3.9.classpath"/>
+    <path refid="library.gradle:_com.google.code.gson:gson:2.8.0.classpath"/>
+    <path refid="library.gradle:_junit:junit:4.11.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-core:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.core:jackson-databind:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.4.4.classpath"/>
+    <path refid="library.gradle:_com.fasterxml.jackson.module:jackson-module-jsonschema:2.4.4.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:woodstox-core-asl:4.3.0.classpath"/>
+    <path refid="library.gradle:_org.codehaus.woodstox:stax2-api:3.1.4.classpath"/>
+    <path refid="library.gradle:_org.yaml:snakeyaml:1.13.classpath"/>
+    <path refid="library.gradle:_commons-fileupload:commons-fileupload:1.3.classpath"/>
+    <path refid="library.gradle:_javax.mail:mail:1.4.2.classpath"/>
+    <path refid="library.gradle:_com.sun.xml.bind:jaxb-impl:2.1.12.classpath"/>
+    <path refid="library.gradle:_javax.ws.rs:javax.ws.rs-api:2.0.classpath"/>
+    <path refid="library.gradle:_org.json:json:20160212.classpath"/>
+    <path refid="library.gradle:_commons-lang:commons-lang:2.6.classpath"/>
+    <path refid="library.gradle:_javax.servlet:javax.servlet-api:3.1.0.classpath"/>
+    <path refid="library.gradle:_org.simpleframework:simple-xml:2.7.1.classpath"/>
+    <path refid="library.gradle:_org.hamcrest:hamcrest-core:1.3.classpath"/>
+    <path refid="library.gradle:_javax.xml.stream:stax-api:1.0-2.classpath"/>
+    <path refid="library.gradle:_commons-io:commons-io:2.2.classpath"/>
+    <path refid="library.gradle:_javax.activation:activation:1.1.classpath"/>
+    <path refid="library.gradle:_javax.xml.bind:jaxb-api:2.1.classpath"/>
+    <path refid="library.gradle:_stax:stax-api:1.0.1.classpath"/>
+    <path refid="library.gradle:_stax:stax:1.2.0.classpath"/>
+    <path refid="library.gradle:_xpp3:xpp3:1.1.3.3.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.teletaxiserver_test">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.teletaxiserver_test">
+    <patternset refid="excluded.from.module.teletaxiserver_test"/>
+  </patternset>
+  
+  <path id="teletaxiserver_test.module.test.sourcepath">
+    <dirset dir="${module.teletaxiserver_test.basedir}/src/test">
+      <include name="java"/>
+      <include name="resources"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.teletaxiserver_test" depends="compile.module.teletaxiserver_test.production,compile.module.teletaxiserver_test.tests" description="Compile module TeleTaxiServer_test"/>
+  
+  <target name="compile.module.teletaxiserver_test.production" depends="register.custom.compilers,compile.module.teletaxiserver_main" description="Compile module TeleTaxiServer_test; production classes"/>
+  
+  <target name="compile.module.teletaxiserver_test.tests" depends="register.custom.compilers,compile.module.teletaxiserver_test.production" description="compile module TeleTaxiServer_test; test classes" unless="skip.tests">
+    <mkdir dir="${teletaxiserver_test.testoutput.dir}"/>
+    <javac2 destdir="${teletaxiserver_test.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.teletaxiserver_test}/javac">
+      <compilerarg line="${compiler.args.teletaxiserver_test}"/>
+      <bootclasspath refid="teletaxiserver_test.module.bootclasspath"/>
+      <classpath refid="teletaxiserver_test.module.classpath"/>
+      <src refid="teletaxiserver_test.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.teletaxiserver_test"/>
+    </javac2>
+    
+    <copy todir="${teletaxiserver_test.testoutput.dir}">
+      <fileset dir="${module.teletaxiserver_test.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.teletaxiserver_test.basedir}/src/test/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.teletaxiserver_test" description="cleanup module">
+    <delete dir="${teletaxiserver_test.output.dir}"/>
+    <delete dir="${teletaxiserver_test.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.teletaxiserver, clean.module.teletaxiserver_main, clean.module.teletaxiserver_test" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.teletaxiserver, compile.module.teletaxiserver_main, compile.module.teletaxiserver_test" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
